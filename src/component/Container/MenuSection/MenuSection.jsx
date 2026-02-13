@@ -1,0 +1,111 @@
+"use client";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { dummyMenu } from "../../../utils/dummyMockData";
+import CreateMenu from "./CreateMenu";
+
+const ServiceList = () => {
+  const [services, setServices] = useState(dummyMenu);
+  const [openModal, setOpenModal] = useState(false);
+
+  return (
+    <>
+      <div className="min-h-screen px-6 py-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold">Menu List</h2>
+
+            <button
+              onClick={() => setOpenModal(true)}
+              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+            >
+              + Create Service
+            </button>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded shadow overflow-x-auto  scrollbar-hide"
+          >
+            <div>
+              <div className="grid grid-cols-4 px-7 py-4 font-bold border-b border-gray-300">
+                <div>Name</div>
+                <div>Created</div>
+                <div>Status</div>
+                <div className="text-right">Action</div>
+              </div>
+              {services?.map((service, index) => (
+                <motion.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="grid grid-cols-4 px-8 py-5 items-center text-sm"
+                >
+                  <div className="font-medium">{service.name}</div>
+                  <div>{service.createdAt}</div>
+                  <div>
+                    <span
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold ${
+                        service.status === "Active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
+                      {service.status}
+                    </span>
+                  </div>
+                  <div className="flex justify-end relative group">
+                    <button className="p-2 rounded-lg hover:bg-gray-100">
+                      ⋮
+                    </button>
+
+                    <div
+                      className="absolute right-0 top-10 w-44 bg-white rounded-xl shadow-lg border  border-gray-300
+                                  opacity-0 invisible group-hover:opacity-100 
+                                  group-hover:visible transition-all duration-200"
+                    >
+                      <button
+                        onClick={() => console.log("Update", service.id)}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => console.log("Delete", service.id)}
+                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-xl cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+              <div className="flex justify-between items-center px-8 py-4">
+                <p className="text-sm text-gray-600">
+                  Showing 1 to {services.length} of {services.length}
+                </p>
+                <div className="flex gap-3">
+                  <button className="w-10 h-10 border rounded-lg flex items-center justify-center">
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button className="w-10 h-10 bg-green-800 text-white rounded-lg">
+                    1
+                  </button>
+                  <button className="w-10 h-10 border rounded-lg flex items-center justify-center">
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+      {openModal && <CreateMenu onClose={() => setOpenModal(false)} />}
+    </>
+  );
+};
+
+export default ServiceList;
