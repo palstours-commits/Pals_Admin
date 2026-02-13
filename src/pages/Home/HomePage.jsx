@@ -14,22 +14,25 @@ export default function HomePage() {
     <div className="min-h-screen px-6 py-10 ">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center flex-wrap gap-4">
-          <div className="flex items-center gap-6 text-sm font-medium">
-            {["All Guest", "Pending", "Booked", "Canceled", "Refund"]?.map(
-              (tab, idx) => (
-                <button
-                  key={tab}
-                  className={`pb-3 transition-all ${
-                    idx === 0
-                      ? "border-b-2 border-[#14532D] text-[#14532D]"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ),
-            )}
+          <div className="overflow-x-auto">
+            <div className="flex items-center gap-6 text-sm font-medium whitespace-nowrap min-w-max">
+              {["All Guest", "Pending", "Booked", "Canceled", "Refund"]?.map(
+                (tab, idx) => (
+                  <button
+                    key={tab}
+                    className={`pb-3 transition-all ${
+                      idx === 0
+                        ? "border-b-2 border-[#14532D] text-[#14532D]"
+                        : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ),
+              )}
+            </div>
           </div>
+
           <div className="flex items-center gap-4">
             <div className="bg-[#14532D] text-white px-6 py-3 rounded-xl font-medium shadow-sm">
               02/13/2026
