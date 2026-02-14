@@ -56,7 +56,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
           </span>
         </div>
         <img
-          src="https://i.pravatar.cc/150?img=5"
+          src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg"
           alt="profile"
           className="w-12 h-12 rounded-xl object-cover cursor-pointer"
         />

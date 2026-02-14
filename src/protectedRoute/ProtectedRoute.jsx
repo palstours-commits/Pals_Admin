@@ -32,7 +32,7 @@ const ProtectedLayout = () => {
           toggleSidebar={() => setCollapsed(!collapsed)}
           toggleMobile={() => setMobileOpen(!mobileOpen)}
         />
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-100">
           <Outlet />
         </div>
       </div>

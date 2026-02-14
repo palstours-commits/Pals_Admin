@@ -10,8 +10,10 @@ import {
 } from "react-icons/fi";
 
 import logoImg from "../../../assets/logo.png";
+
 const Sidebar = ({ collapsed }) => {
   const [openMenu, setOpenMenu] = useState(true);
+  const [openService, setOpenService] = useState(false); 
 
   return (
     <div className="min-h-screen p-4">
@@ -22,7 +24,8 @@ const Sidebar = ({ collapsed }) => {
           <img src={logoImg} alt="logo" className="w-40" />
         )}
       </div>
-      <ul className="space-y-6 text-sm font-semibold text-gray-500">
+
+      <ul className="space-y-6 text-sm font-semibold text-gray-500 p-3">
         <li>
           <Link to="/" className="flex items-center gap-3 hover:text-red-500">
             <FiHome size={20} />
@@ -39,13 +42,37 @@ const Sidebar = ({ collapsed }) => {
           </Link>
         </li>
         <li>
-          <Link
-            to="/service"
-            className="flex items-center gap-3 hover:text-red-500"
+          <div
+            onClick={() => setOpenService(!openService)}
+            className="flex items-center justify-between cursor-pointer hover:text-red-500"
           >
-            <FiSettings size={20} />
-            {!collapsed && <span>Service</span>}
-          </Link>
+            <div className="flex items-center gap-3">
+              <FiSettings size={20} />
+              {!collapsed && <span>Service</span>}
+            </div>
+
+            {!collapsed && (
+              <FiChevronDown
+                className={`transition-transform duration-300 ${
+                  openService ? "rotate-180" : ""
+                }`}
+              />
+            )}
+          </div>
+          {!collapsed && openService && (
+            <ul className="pl-8 mt-3 space-y-3 text-gray-400">
+              <li>
+                <Link to="/service/hotel" className="hover:text-red-500">
+                  Hotel
+                </Link>
+              </li>
+              <li>
+                <Link to="/service/flight" className="hover:text-red-500">
+                  Flight
+                </Link>
+              </li>
+            </ul>
+          )}
         </li>
         <li>
           <Link
