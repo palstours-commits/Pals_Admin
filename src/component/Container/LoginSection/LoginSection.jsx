@@ -8,7 +8,7 @@ import {
   clearError,
   clearMessage,
   loginUser,
-} from "../../../store/slice/loginSlice";
+} from "../../../store/slice/authSlice";
 import { notifyAlert } from "../../../utils/notificationService";
 
 const LoginSection = () => {
@@ -88,7 +88,7 @@ const LoginSection = () => {
               <h2 className="text-3xl font-semibold text-center text-gray-800 mb-10">
                 Sign in your account
               </h2>
-              <form className="space-y-6" onSubmit={handleSubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <label className="text-sm font-semibold text-gray-700">
                     Email<span className="text-red-500">*</span>

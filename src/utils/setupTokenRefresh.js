@@ -1,5 +1,5 @@
 import { store } from "../store/store";
-import { logout, refreshToken } from "../store/slice/registerSlice";
+import { logout, refreshToken } from "../store/slice/authSlice";
 
 let refreshTimeout;
 export const isLoginExpired = () => {

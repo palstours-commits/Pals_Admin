@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../../../store/slice/loginSlice";
+import { logout } from "../../../store/slice/authSlice";
 import { notifyAlert } from "../../../utils/notificationService";
 
 const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {

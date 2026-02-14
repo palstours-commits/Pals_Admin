@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 
 const ProtectedLayout = () => {
   const { accessToken, loading } = useSelector((state) => state.auth);
-
-  // ✅ Hooks must always be at top
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -18,7 +16,6 @@ const ProtectedLayout = () => {
       </div>
     );
   }
-
   if (!accessToken) {
     return <Navigate to="/login" replace />;
   }

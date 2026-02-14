@@ -8,8 +8,20 @@ import SubMenu from "./pages/SubMenu/SubMenu";
 import Zone from "./pages/Zone/Zone";
 import Contact from "./pages/Contact/Contact";
 import Flight from "./pages/Flight/Flight";
+import { useDispatch, useSelector } from "react-redux";
+import { setupTokenRefresh } from "./utils/setupTokenRefresh";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+  const { accessToken } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (accessToken) {
+      setupTokenRefresh(dispatch);
+    }
+  }, [accessToken, dispatch]);
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

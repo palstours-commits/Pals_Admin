@@ -14,7 +14,6 @@ export const loginUser = createAsyncThunk(
       if (response?.data?.success === false) {
         return thunkAPI.rejectWithValue(response?.data?.errors);
       }
-
       return response?.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -24,6 +23,27 @@ export const loginUser = createAsyncThunk(
   },
 );
 
+export const refreshToken = createAsyncThunk(
+  "auth/refreshToken",
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const token = state?.auth?.refreshToken;
+    try {
+      const response = await FetchApi({
+        endpoint: "/admin/refresh",
+        method: "POST",
+        token,
+      });
+      const data = response?.data;
+      if (data?.accessToken) {
+        localStorage.setItem("tokenExpiry", Date.now() + 50 * 60 * 1000);
+      }
+      return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message || "Token refresh failed");
+    }
+  },
+);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -40,11 +60,9 @@ const authSlice = createSlice({
       state.user = null;
       state.accessToken = null;
     },
-
     clearError(state) {
       state.error = null;
     },
-
     clearMessage(state) {
       state.message = null;
     },
@@ -59,15 +77,31 @@ const authSlice = createSlice({
 
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
-        state.accessToken = action.payload?.accessToken;
-        state.refreshToken = action.payload?.refreshToken;
-        state.message = action.payload?.message || "login Success";
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        state.user = {
+          _id: action.payload._id,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+          email: action.payload.email,
+          type: action.payload.type,
+          status: action.payload.status,
+        };
+        localStorage.setItem("loginTimestamp", Date.now());
+        localStorage.setItem("tokenExpiry", Date.now() + 50 * 60 * 1000);
+        state.message = "Login Success";
       })
 
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Invalid email or password";
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.accessToken = action.payload?.accessToken;
+        state.refreshToken = action.payload?.refreshToken || state.refreshToken;
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
+        state.refreshError = action.payload || "Failed to refresh token";
       });
   },
 });
