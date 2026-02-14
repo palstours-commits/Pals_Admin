@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import Logo from "../assets/navbar_logo.svg";
 
 const positions = {
-  "bottom-right": "bottom-4 right-4",
-  "bottom-left": "bottom-4 left-4",
-  "top-right": "top-4 right-4",
-  "top-left": "top-4 left-4",
+  "bottom-right": "bottom-6 right-4",
+  "bottom-left": "bottom-6 left-4",
+  "top-right": "top-6 right-4",
+  "top-left": "top-6 left-4",
   center: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
 };
 
@@ -35,7 +35,7 @@ export default function Notification({
     <motion.div
       className={`fixed z-50 ${positions[position]} ${
         typeStyles[type]
-      } p-5 shadow-2xl max-w-sm rounded-xl border border-black/5`}
+      } p-5 shadow-2xl max-w-sm rounded-md border border-black/5`}
       initial={{ opacity: 0, x: 120 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: "spring", stiffness: 140, damping: 18 }}

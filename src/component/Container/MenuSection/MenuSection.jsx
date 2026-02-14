@@ -78,7 +78,7 @@ const MenuSection = () => {
               onClick={() => setOpenModal(true)}
               className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
             >
-              + Create Menu
+              + Create Menu ({menus?.length})
             </button>
           </div>
 

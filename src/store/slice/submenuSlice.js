@@ -146,9 +146,11 @@ const submenuSlice = createSlice({
   reducers: {
     clearSubMenuError(state) {
       state.error = null;
+      state.deletedError = null;
     },
     clearSubMenuMessage(state) {
       state.message = null;
+      state.deletedMessage = null;
     },
   },
   extraReducers: (builder) => {

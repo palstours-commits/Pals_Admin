@@ -1,109 +1,116 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { FetchApi } from "../../api/FetchApi";
 
-export const getMenus = createAsyncThunk(
-  "menu/getMenus",
+export const getZones = createAsyncThunk(
+  "zone/getZones",
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
+
     try {
       const response = await FetchApi({
-        endpoint: "/admin/menu",
+        endpoint: "/admin/zone",
         method: "GET",
         token,
       });
+
       return response?.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Failed to fetch menus");
+      return thunkAPI.rejectWithValue(err.message || "Failed to fetch zones");
     }
   },
 );
 
-export const createMenu = createAsyncThunk(
-  "menu/createMenu",
+export const createZone = createAsyncThunk(
+  "zone/createZone",
   async (payload, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
+
     try {
       const response = await FetchApi({
-        endpoint: "/admin/menu",
+        endpoint: "/admin/zone",
         method: "POST",
         body: payload,
         token,
       });
 
-      thunkAPI.dispatch(getMenus());
+      thunkAPI.dispatch(getZones());
       return response?.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Failed to create menu");
+      return thunkAPI.rejectWithValue(err.message || "Failed to create zone");
     }
   },
 );
 
-export const updateMenu = createAsyncThunk(
-  "menu/updateMenu",
+export const updateZone = createAsyncThunk(
+  "zone/updateZone",
   async ({ id, data }, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
+
     try {
       const response = await FetchApi({
-        endpoint: `/admin/menu/${id}`,
+        endpoint: `/admin/zone/${id}`,
         method: "PUT",
         body: data,
         token,
       });
 
-      thunkAPI.dispatch(getMenus());
+      thunkAPI.dispatch(getZones());
       return response?.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Failed to update menu");
+      return thunkAPI.rejectWithValue(err.message || "Failed to update zone");
     }
   },
 );
 
-export const deleteMenu = createAsyncThunk(
-  "menu/deleteMenu",
+export const deleteZone = createAsyncThunk(
+  "zone/deleteZone",
   async (id, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
+
     try {
-      await FetchApi({
-        endpoint: `/admin/menu/${id}`,
+      const response = await FetchApi({
+        endpoint: `/admin/zone/${id}`,
         method: "DELETE",
         token,
       });
-      thunkAPI.dispatch(getMenus());
-      return id;
+
+      thunkAPI.dispatch(getZones());
+      return response?.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Failed to delete menu");
+      return thunkAPI.rejectWithValue(err.message || "Failed to delete zone");
     }
   },
 );
 
-export const restoreMenu = createAsyncThunk(
-  "menu/restoreMenu",
+export const restoreZone = createAsyncThunk(
+  "zone/restoreZone",
   async (id, thunkAPI) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
+
     try {
-      await FetchApi({
-        endpoint: `/admin/menu/${id}/restore`,
+      const response = await FetchApi({
+        endpoint: `/admin/zone/${id}/restore`,
         method: "PATCH",
         token,
       });
 
-      thunkAPI.dispatch(getMenus());
-      return id;
+      thunkAPI.dispatch(getZones());
+      return response?.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Failed to restore menu");
+      return thunkAPI.rejectWithValue(err.message || "Failed to restore zone");
     }
   },
 );
 
-const menuSlice = createSlice({
-  name: "menu",
+const zoneSlice = createSlice({
+  name: "zone",
   initialState: {
-    menus: [],
+    zones: [],
     loading: false,
     actionLoading: false,
     error: null,
@@ -112,80 +119,83 @@ const menuSlice = createSlice({
     deletedError: null,
   },
   reducers: {
-    clearMenuError(state) {
+    clearZoneError(state) {
       state.error = null;
-      state.deletedError = null;
     },
-    clearMenuMessage(state) {
+    clearZoneMessage(state) {
       state.message = null;
+    },
+    clearDeletedZoneMessage(state) {
       state.deletedMessage = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getMenus.pending, (state) => {
+      .addCase(getZones.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getMenus.fulfilled, (state, action) => {
+      .addCase(getZones.fulfilled, (state, action) => {
         state.loading = false;
-        state.menus = action.payload?.menus;
+        state.zones = action.payload?.zones || [];
       })
-      .addCase(getMenus.rejected, (state, action) => {
+      .addCase(getZones.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(createMenu.pending, (state) => {
+      .addCase(createZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
       })
-      .addCase(createMenu.fulfilled, (state, action) => {
+      .addCase(createZone.fulfilled, (state, action) => {
         state.actionLoading = false;
-        state.message = action.payload?.message || "Menu created successfully";
+        state.message = action.payload?.message || "Zone created successfully";
       })
-      .addCase(createMenu.rejected, (state, action) => {
+      .addCase(createZone.rejected, (state, action) => {
         state.actionLoading = false;
         state.error = action.payload;
       })
-      .addCase(updateMenu.pending, (state) => {
+      .addCase(updateZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
       })
-      .addCase(updateMenu.fulfilled, (state, action) => {
+      .addCase(updateZone.fulfilled, (state, action) => {
         state.actionLoading = false;
-        state.message = action.payload?.message || "Menu updated successfully";
+        state.message = action.payload?.message || "Zone updated successfully";
       })
-      .addCase(updateMenu.rejected, (state, action) => {
+      .addCase(updateZone.rejected, (state, action) => {
         state.actionLoading = false;
         state.error = action.payload;
       })
-      .addCase(deleteMenu.pending, (state) => {
+      .addCase(deleteZone.pending, (state) => {
         state.actionLoading = true;
         state.deletedError = null;
       })
-      .addCase(deleteMenu.fulfilled, (state, action) => {
+      .addCase(deleteZone.fulfilled, (state, action) => {
         state.actionLoading = false;
         state.deletedMessage =
-          action.payload?.message || "Menu deleted successfully";
+          action.payload?.message || "Zone deleted successfully";
       })
-      .addCase(deleteMenu.rejected, (state, action) => {
+      .addCase(deleteZone.rejected, (state, action) => {
         state.actionLoading = false;
         state.deletedError = action.payload;
       })
-      .addCase(restoreMenu.pending, (state) => {
+      .addCase(restoreZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
       })
-      .addCase(restoreMenu.fulfilled, (state, action) => {
+      .addCase(restoreZone.fulfilled, (state, action) => {
         state.actionLoading = false;
-        state.message = action.payload?.message || "Menu restored successfully";
+        state.message = action.payload?.message || "Zone restored successfully";
       })
-      .addCase(restoreMenu.rejected, (state, action) => {
+      .addCase(restoreZone.rejected, (state, action) => {
         state.actionLoading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { clearMenuError, clearMenuMessage } = menuSlice.actions;
-export default menuSlice.reducer;
+export const { clearZoneError, clearZoneMessage, clearDeletedZoneMessage } =
+  zoneSlice.actions;
+
+export default zoneSlice.reducer;

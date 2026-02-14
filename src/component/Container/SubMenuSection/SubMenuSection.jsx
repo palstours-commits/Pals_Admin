@@ -81,7 +81,7 @@ const SubMenuSection = () => {
               onClick={() => setOpenModal(true)}
               className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
             >
-              + Create SubMenu
+              + Create SubMenu  ({submenus?.length})
             </button>
           </div>
 

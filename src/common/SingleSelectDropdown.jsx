@@ -56,7 +56,7 @@ const SingleSelectDropdown = ({
         <label className="block text-sm  mb-2 text-gray-600">{label}</label>
       )}
       <div
-        className="w-full p-3 border border-gray-300 rounded-xl cursor-pointer 
+        className="w-full p-3 border border-gray-300 rounded-md cursor-pointer 
                 flex items-center justify-between bg-white relative"
         onClick={() => setOpen(!open)}
       >

@@ -1,86 +1,170 @@
-"use client";
-import { MoreVertical, Calendar, Mail, Phone, Info } from "lucide-react";
-import { packages } from "../../../utils/dummyMockData";
+import { Calendar } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getZones,
+  deleteZone,
+  restoreZone,
+  clearZoneError,
+  clearZoneMessage,
+  clearDeletedZoneMessage,
+} from "../../../store/slice/zoneSlice";
+import { useEffect, useState } from "react";
+import Image from "../../../common/Image";
+import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import CreateZone from "./CreateZone";
+import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
+import { notifyAlert } from "../../../utils/notificationService";
+import DotMenu from "../../../common/DotMenu";
 
 const Zonesection = () => {
+  const dispatch = useDispatch();
+  const { zones, actionLoading, error, message, deletedMessage } = useSelector(
+    (state) => state.zone,
+  );
+
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedZone, setSelectedZone] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(getZones());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (message) {
+      notifyAlert({
+        title: "Success",
+        message,
+        type: "success",
+      });
+      dispatch(clearZoneMessage());
+    }
+
+    if (error) {
+      notifyAlert({
+        title: "Error",
+        message,
+        type: "error",
+      });
+      dispatch(clearZoneError());
+    }
+
+    if (deletedMessage) {
+      notifyAlert({
+        title: "Deleted",
+        message: deletedMessage,
+        type: "success",
+      });
+      dispatch(clearDeletedZoneMessage());
+    }
+  }, [message, error, deletedMessage]);
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
+    await dispatch(deleteZone(deleteId));
+    setConfirmOpen(false);
+    setDeleteId(null);
+  };
+
   return (
-    <div className="min-h-screen ">
-      <div className="w-full  px-6 py-4 flex items-center justify-between">
-        <button className="bg-red-800 hover:bg-red-700 text-white font-medium px-6 py-3 rounded-xl transition">
-          + New Task
-        </button>
-        <div className="flex items-center gap-4">
-          <button className="bg-green-800 hover:bg-green-900 text-white p-3 rounded-xl transition">
-            <Mail size={18} />
-          </button>
-          <button className="bg-green-800 hover:bg-green-900 text-white p-3 rounded-xl transition">
-            <Phone size={18} />
-          </button>
-          <button className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-xl transition">
-            <Info size={18} />
+    <>
+      <div className="min-h-screen">
+        <div className="flex justify-between items-center mb-6 px-8">
+          <h2 className="text-xl font-bold">Zone List</h2>
+
+          <button
+            onClick={() => setOpenModal(true)}
+            className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+          >
+            + Create Zone ({zones?.length})
           </button>
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          {zones?.map((zone) => (
+            <div
+              key={zone._id}
+              className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
+            >
+              <div className="relative h-60 w-full">
+                <Image
+                  src={zone.image}
+                  alt={zone.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm font-semibold text-red-600">
+                    {zone.subMenuId?.name || "SubMenu"}
+                  </span>
+                  <DotMenu
+                    onEdit={() => {
+                      setSelectedZone(zone);
+                      setOpenModal(true);
+                    }}
+                    onDelete={() => handleDeleteClick(zone._id)}
+                  />
+                </div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {zone.name}
+                </h2>
+                <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                  {zone.description}
+                </p>
+                <div className="flex items-center gap-2 text-gray-500 text-sm">
+                  <Calendar className="w-4 h-4" />
+                  <span>{formatIndianDateTime(zone.createdAt)}</span>
+                </div>
+                <div className="mt-3">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      zone.deletedAt
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {zone.deletedAt ? "Deleted" : "Active"}
+                  </span>
+                </div>
+                {zone.deletedAt && (
+                  <button
+                    onClick={() => dispatch(restoreZone(zone._id))}
+                    className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm"
+                  >
+                    Restore Zone
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {packages?.map((data, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
-          >
-            <div className="relative h-64 w-full">
-              <img
-                src={data.image}
-                alt="card"
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            <div className="p-5">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-red-500 font-semibold text-sm">
-                  {data.id}
-                </span>
-                <MoreVertical className="w-5 h-5 text-gray-500 cursor-pointer" />
-              </div>
-
-              <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                {data.title}
-              </h2>
-
-              <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
-                <Calendar className="w-4 h-4" />
-                <span>{data.createdAt}</span>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200" />
-
-            <div className="p-5 space-y-4 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Deadline Date :</span>
-                <span className="font-medium text-gray-800">
-                  {data.deadline}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Client Name :</span>
-                <span className="font-medium text-gray-800">
-                  {data.clientName}
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-500">Location :</span>
-                <span className="font-medium text-gray-800">
-                  {data.location}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      {openModal && (
+        <CreateZone
+          zone={selectedZone}
+          onClose={() => {
+            setOpenModal(false);
+            setSelectedZone(null);
+          }}
+        />
+      )}
+      <ConfirmDeleteModal
+        isOpen={confirmOpen}
+        title="Are you sure you want to delete this zone?"
+        loading={actionLoading}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setConfirmOpen(false);
+          setDeleteId(null);
+        }}
+      />
+    </>
   );
 };
 
