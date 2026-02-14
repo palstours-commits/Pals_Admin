@@ -2,14 +2,57 @@ import MainLayout from "../../../common/MainLayout";
 import loginImg from "../../../assets/login-bg.png";
 import logoImg from "../../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearError,
+  clearMessage,
+  loginUser,
+} from "../../../store/slice/loginSlice";
+import { notifyAlert } from "../../../utils/notificationService";
 
 const LoginSection = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, message, error, loading } = useSelector((state) => state.auth);
 
-  const handleNavigate = (e) => {
-    e.preventDefault();
-    navigate("/");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser(formData));
+  };
+
+  useEffect(() => {
+    if (message) {
+      notifyAlert({
+        title: "Login Success",
+        message,
+        type: "success",
+      });
+      navigate("/");
+      dispatch(clearMessage());
+    }
+
+    if (error) {
+      notifyAlert({
+        title: "Login Failed",
+        message: error,
+        type: "error",
+      });
+      dispatch(clearError());
+    }
+  }, [message, error]);
 
   return (
     <MainLayout>
@@ -18,11 +61,9 @@ const LoginSection = () => {
           <div className="col-span-4 bg-white flex flex-col justify-between items-center px-12 py-16">
             <div className="text-center mt-12">
               <img src={logoImg} alt="logo" className="mx-auto w-32" />
-
               <h3 className="mt-6 text-2xl font-semibold text-gray-800">
                 Welcome back!
               </h3>
-
               <p className="text-gray-500 mt-3 text-sm leading-relaxed">
                 User Experience & Interface Design <br />
                 Strategy SaaS Solutions
@@ -47,50 +88,46 @@ const LoginSection = () => {
               <h2 className="text-3xl font-semibold text-center text-gray-800 mb-10">
                 Sign in your account
               </h2>
-
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label className="text-sm font-semibold text-gray-700">
                     Email<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="demo@example.com"
                     className="w-full mt-2 p-3 rounded-lg bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
-
                 <div>
                   <label className="text-sm font-semibold text-gray-700">
                     Password<span className="text-red-500">*</span>
                   </label>
                   <input
                     type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     placeholder="******"
                     className="w-full mt-2 p-3 rounded-lg bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
                   />
                 </div>
-
                 <div className="flex items-center gap-2">
                   <input type="checkbox" className="w-4 h-4 accent-red-600" />
                   <span className="text-sm text-gray-600">
                     Remember my preference
                   </span>
                 </div>
-
                 <button
-                  onClick={handleNavigate}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition duration-300 shadow-md"
+                  disabled={loading}
+                  type="submit"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition duration-300 shadow-md cursor-pointer"
                 >
-                  Sign In
+                  {loading ? "Login..." : "login"}
                 </button>
-
-                <p className="text-sm text-center text-gray-600">
-                  Don’t have an account?{" "}
-                  <span className="text-red-600 cursor-pointer font-medium">
-                    Sign up
-                  </span>
-                </p>
               </form>
             </div>
           </div>

@@ -23,7 +23,7 @@ const FlightBookingSection = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-white rounded shadow overflow-x-auto"
+          className="bg-white rounded shadow overflow-x-auto scrollbar-hide"
         >
           <div className="grid grid-cols-6 px-7 py-4 font-bold border-b border-gray-300">
             <div>Name</div>

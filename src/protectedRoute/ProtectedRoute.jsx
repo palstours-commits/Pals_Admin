@@ -1,9 +1,22 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Header from "../component/Common/Header/Header";
 import Sidebar from "../component/Common/Sidebar/Sidebar";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ProtectedLayout = () => {
+  const { accessToken, loading } = useSelector((state) => state.auth);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 

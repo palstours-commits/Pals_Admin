@@ -9,7 +9,6 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 
-import logoImg from "../../../assets/logo.png";
 
 const Sidebar = ({ collapsed }) => {
   const [openMenu, setOpenMenu] = useState(true);
@@ -17,11 +16,11 @@ const Sidebar = ({ collapsed }) => {
 
   return (
     <div className="min-h-screen p-4">
-      <div className="mb-10 flex justify-center">
+      <div className="mb-10 flex justify-start px-10">
         {collapsed ? (
-          <img src={logoImg} alt="logo" className="w-10" />
+          <img src={"./navbar_logo.svg"} alt="logo" className="w-2" />
         ) : (
-          <img src={logoImg} alt="logo" className="w-40" />
+          <img src={"./navbar_logo.svg"} alt="logo" className="w-20" />
         )}
       </div>
 
