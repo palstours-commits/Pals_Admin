@@ -6,6 +6,11 @@ import { useSelector } from "react-redux";
 
 const ProtectedLayout = () => {
   const { accessToken, loading } = useSelector((state) => state.auth);
+
+  // ✅ Hooks must always be at top
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -17,8 +22,6 @@ const ProtectedLayout = () => {
   if (!accessToken) {
     return <Navigate to="/login" replace />;
   }
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden">
@@ -28,6 +31,7 @@ const ProtectedLayout = () => {
           onClick={() => setMobileOpen(false)}
         />
       )}
+
       <div
         className={`
           fixed md:static z-50 top-0 left-0 h-full bg-white
@@ -39,12 +43,14 @@ const ProtectedLayout = () => {
       >
         <Sidebar collapsed={collapsed} />
       </div>
+
       <div className="flex-1 flex flex-col w-full">
         <Header
           collapsed={collapsed}
           toggleSidebar={() => setCollapsed(!collapsed)}
           toggleMobile={() => setMobileOpen(!mobileOpen)}
         />
+
         <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-100">
           <Outlet />
         </div>

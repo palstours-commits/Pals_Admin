@@ -4,11 +4,30 @@ import {
   FiBell,
   FiMail,
   FiMessageSquare,
+  FiUser,
+  FiMail as FiInbox,
+  FiLogOut,
 } from "react-icons/fi";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/slice/loginSlice";
+import { notifyAlert } from "../../../utils/notificationService";
 
 const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    notifyAlert({
+      title: "Logout Success",
+      message: "Logout Succesfully",
+      type: "success",
+    });
+  };
+
   return (
-    <header className="w-full h-25 bg-white flex items-center justify-between  px-15">
+    <header className="w-full h-25 bg-white flex items-center justify-between px-15 relative">
       <div className="flex items-center gap-4">
         <FiMenu
           size={24}
@@ -55,11 +74,32 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
             15
           </span>
         </div>
-        <img
-          src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg"
-          alt="profile"
-          className="w-12 h-12 rounded-xl object-cover cursor-pointer"
-        />
+        <div
+          className="relative"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <img
+            src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg"
+            alt="profile"
+            className="w-12 h-12 rounded-xl object-cover cursor-pointer"
+          />
+          {open && (
+            <div className="absolute right-0 pt-4 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 p-3 z-50">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                <FiUser className="text-red-500" />
+                <span className="text-gray-700">Profile</span>
+              </div>
+              <div
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+              >
+                <FiLogOut className="text-red-500" />
+                <span className="text-gray-700">Logout</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
