@@ -30,7 +30,7 @@ export const refreshToken = createAsyncThunk(
     const token = state?.auth?.refreshToken;
     try {
       const response = await FetchApi({
-        endpoint: "/admin/refresh",
+        endpoint: "/admins/refresh",
         method: "POST",
         token,
       });

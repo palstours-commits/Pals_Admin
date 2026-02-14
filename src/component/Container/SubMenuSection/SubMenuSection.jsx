@@ -1,19 +1,74 @@
-"use client";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { dummySubMenu } from "../../../utils/dummyMockData";
+import { useDispatch, useSelector } from "react-redux";
+import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import Image from "../../../common/Image";
+import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
+import { notifyAlert } from "../../../utils/notificationService";
+import DotMenu from "../../../common/DotMenu";
 import CreateSubMenu from "./CreateSubMenu";
+import {
+  clearSubMenuError,
+  clearSubMenuMessage,
+  deleteSubMenu,
+  getSubMenus,
+} from "../../../store/slice/submenuSlice";
 
 const SubMenuSection = () => {
-  const [services, setServices] = useState(dummySubMenu);
+  const dispatch = useDispatch();
+  const { submenus, actionLoading, deletedError, deletedMessage } = useSelector(
+    (state) => state.submenu,
+  );
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
-  const totalPages = Math.ceil(services.length / itemsPerPage);
+  const [deleteId, setDeleteId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const totalPages = Math.ceil(submenus.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentServices = services.slice(startIndex, startIndex + itemsPerPage);
+  const currentServices = submenus?.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
+
+  useEffect(() => {
+    dispatch(getSubMenus());
+  }, [dispatch]);
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteId) return;
+
+    await dispatch(deleteSubMenu(deleteId));
+    setConfirmOpen(false);
+    setDeleteId(null);
+  };
+
+  useEffect(() => {
+    if (deletedMessage) {
+      notifyAlert({
+        title: "Delete Success",
+        message: deletedMessage,
+        type: "success",
+      });
+      dispatch(clearSubMenuMessage());
+    }
+
+    if (deletedError) {
+      notifyAlert({
+        title: "Delete Failed",
+        message: deletedError,
+        type: "error",
+      });
+      dispatch(clearSubMenuError());
+    }
+  }, [deletedMessage, deletedError]);
 
   return (
     <>
@@ -33,59 +88,61 @@ const SubMenuSection = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white rounded shadow overflow-x-auto"
+            className="bg-white rounded shadow overflow-x-auto overflow-y-visible"
           >
             <div>
-              <div className="grid grid-cols-4 px-7 py-4 font-bold border-b border-gray-300">
+              <div className="grid grid-cols-5  px-7 py-4 font-bold border-b border-gray-300">
                 <div>Name</div>
                 <div>Created</div>
+                <div>Images</div>
                 <div>Status</div>
                 <div className="text-right">Action</div>
               </div>
-              {currentServices.map((service, index) => (
+
+              {currentServices?.map((menu, index) => (
                 <motion.div
-                  key={service.id}
+                  key={menu?._id}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="grid grid-cols-4 px-8 py-5 items-center text-sm"
+                  className="grid grid-cols-5 px-8 py-5 items-center text-sm"
                 >
-                  <div className="font-medium">{service.name}</div>
-                  <div>{service.createdAt}</div>
-
+                  <div className="font-medium">{menu?.name}</div>
+                  <div>{formatIndianDateTime(menu?.createdAt)}</div>
+                  <div>
+                    <Image
+                      src={menu?.bannerImage}
+                      alt={menu?.name}
+                      className="w-15 h-15"
+                    />
+                  </div>
                   <div>
                     <span
                       className={`px-4 py-2 rounded-xl text-sm font-semibold ${
-                        service.status === "Active"
+                        menu?.status === "Active"
                           ? "bg-green-100 text-green-700"
                           : "bg-red-100 text-red-600"
                       }`}
                     >
-                      {service.status}
+                      {menu?.status}
                     </span>
                   </div>
-
-                  <div className="flex justify-end relative group">
-                    <button className="p-2 rounded-lg hover:bg-gray-100">
-                      ⋮
-                    </button>
-                    <div className="absolute right-0 top-0 w-44 bg-white rounded-xl shadow-lg border border-gray-300 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                      <button className="w-full text-left px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                        Update
-                      </button>
-
-                      <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-xl cursor-pointer">
-                        Delete
-                      </button>
-                    </div>
+                  <div className="flex justify-end">
+                    <DotMenu
+                      onEdit={() => {
+                        setOpenModal(true);
+                        setSelectedService(menu);
+                      }}
+                      onDelete={() => handleDeleteClick(menu._id)}
+                    />
                   </div>
                 </motion.div>
               ))}
-              <div className="flex justify-between items-center px-8 py-4">
+              <div className="flex justify-between items-center px-8 py-4 ">
                 <p className="text-sm text-gray-600">
                   Showing {startIndex + 1} to{" "}
-                  {Math.min(startIndex + itemsPerPage, services.length)} of{" "}
-                  {services.length}
+                  {Math.min(startIndex + itemsPerPage, submenus.length)} of{" "}
+                  {submenus.length}
                 </p>
 
                 <div className="flex gap-3">
@@ -96,6 +153,7 @@ const SubMenuSection = () => {
                   >
                     <ChevronLeft size={18} />
                   </button>
+
                   <button
                     className={`w-10 h-10 rounded-lg ${
                       currentPage ? "bg-green-800 text-white" : "border"
@@ -116,8 +174,25 @@ const SubMenuSection = () => {
           </motion.div>
         </div>
       </div>
-
-      {openModal && <CreateSubMenu onClose={() => setOpenModal(false)} />}
+      {openModal && (
+        <CreateSubMenu
+          service={selectedService}
+          onClose={() => {
+            setOpenModal(false);
+            setSelectedService(null);
+          }}
+        />
+      )}
+      <ConfirmDeleteModal
+        isOpen={confirmOpen}
+        title="Are you sure you want to delete this menu?"
+        loading={actionLoading}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setConfirmOpen(false);
+          setDeleteId(null);
+        }}
+      />
     </>
   );
 };
