@@ -14,6 +14,7 @@ import {
   clearPackageError,
   clearPackageMessage,
 } from "../../../store/slice/packageSlice";
+import { Link } from "react-router-dom";
 
 const PackageSection = () => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const PackageSection = () => {
 
             <button
               onClick={() => setOpenModal(true)}
-              className="bg-green-800 text-white px-6 py-2 rounded-md"
+              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
             >
               + Create Package ({packages?.length || 0})
             </button>
@@ -78,13 +79,15 @@ const PackageSection = () => {
                 key={pkg._id}
                 className="bg-white rounded-xl shadow-lg overflow-hidden "
               >
-                <div className="relative h-56">
-                  <Image
-                    src={pkg.images?.[0]}
-                    alt={pkg.packageName}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
+                <Link to={`/package/${pkg?._id}`}>
+                  <div className="relative h-56">
+                    <Image
+                      src={pkg.images?.[0]}
+                      alt={pkg.packageName}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
+                </Link>
 
                 <div className="p-5">
                   <div className="flex justify-between mb-2">

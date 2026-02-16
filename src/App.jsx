@@ -12,6 +12,7 @@ import Zone from "./pages/Zone/Zone";
 import Contact from "./pages/Contact/Contact";
 import Flight from "./pages/Flight/Flight";
 import Package from "./pages/Package/Package";
+import ViewPackage from "./pages/ViewPackage/ViewPackage";
 
 function App() {
   const dispatch = useDispatch();
@@ -33,7 +34,8 @@ function App() {
         <Route path="/zone" element={<Zone />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/service/flight" element={<Flight />} />
-        <Route path="/package" element={<Package />} />
+        <Route path="/packages" element={<Package />} />
+        <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

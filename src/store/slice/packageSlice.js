@@ -212,7 +212,7 @@ const packageSlice = createSlice({
       })
 
       .addCase(getPackageById.fulfilled, (state, action) => {
-        state.singlePackage = action.payload?.package || null;
+        state.singlePackage = action.payload || null;
       })
 
       .addCase(createPackage.pending, (state) => {

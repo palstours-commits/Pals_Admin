@@ -132,7 +132,7 @@ const CreatePackage = ({ packageData, onClose }) => {
     if (message) {
       notifyAlert({ title: "Success", message, type: "success" });
       dispatch(clearPackageMessage());
-      navigate("/admin/package");
+      onClose();
     }
 
     if (error) {
