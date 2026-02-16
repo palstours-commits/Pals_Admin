@@ -1,4 +1,7 @@
 import { Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setupTokenRefresh } from "./utils/setupTokenRefresh";
+import { useEffect } from "react";
 import HomePage from "./pages/Home/HomePage";
 import NotFound from "./pages/NotFound/NotFound";
 import Login from "./pages/Login/Login";
@@ -8,9 +11,7 @@ import SubMenu from "./pages/SubMenu/SubMenu";
 import Zone from "./pages/Zone/Zone";
 import Contact from "./pages/Contact/Contact";
 import Flight from "./pages/Flight/Flight";
-import { useDispatch, useSelector } from "react-redux";
-import { setupTokenRefresh } from "./utils/setupTokenRefresh";
-import { useEffect } from "react";
+import Package from "./pages/Package/Package";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ function App() {
         <Route path="/zone" element={<Zone />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/service/flight" element={<Flight />} />
+        <Route path="/package" element={<Package />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

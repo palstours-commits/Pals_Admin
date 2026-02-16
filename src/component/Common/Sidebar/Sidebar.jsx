@@ -9,10 +9,9 @@ import {
   FiChevronDown,
 } from "react-icons/fi";
 
-
 const Sidebar = ({ collapsed }) => {
   const [openMenu, setOpenMenu] = useState(true);
-  const [openService, setOpenService] = useState(false); 
+  const [openService, setOpenService] = useState(false);
 
   return (
     <div className="min-h-screen p-4">
@@ -121,6 +120,11 @@ const Sidebar = ({ collapsed }) => {
               <li>
                 <Link to="/zone" className="hover:text-red-500">
                   Zone
+                </Link>
+              </li>
+              <li>
+                <Link to="/package" className="hover:text-red-500">
+                  Package
                 </Link>
               </li>
             </ul>

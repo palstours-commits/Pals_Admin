@@ -20,6 +20,7 @@ const MenuSection = () => {
   const { menus, actionLoading, deletedMessage, deletedError } = useSelector(
     (state) => state.menu,
   );
+  
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
