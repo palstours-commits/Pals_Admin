@@ -12,13 +12,13 @@ import {
   clearContactError,
   clearContactMessage,
 } from "../../../store/slice/contactusSlice";
-import CreateContact from "./CreateContact"; 
+import CreateContact from "./CreateContact";
 
 const ContactSection = () => {
   const dispatch = useDispatch();
 
   const { contacts, loading, deletedMessage, deletedError } = useSelector(
-    (state) => state.contactus
+    (state) => state.contactus,
   );
 
   const [openModal, setOpenModal] = useState(false);
@@ -91,13 +91,13 @@ const ContactSection = () => {
                 <div>Email</div>
                 <div>Mobile</div>
                 <div>Country</div>
-                <div>Status</div>
+                <div>message</div>
                 <div>Created</div>
                 <div className="text-right">Action</div>
               </div>
 
               {contacts?.length > 0 ? (
-                contacts.map((item) => (
+                contacts?.map((item) => (
                   <div
                     key={item._id}
                     className="grid grid-cols-7 px-8 py-5 text-sm items-center "
@@ -106,21 +106,9 @@ const ContactSection = () => {
                     <div className="truncate">{item.email}</div>
                     <div>{item.mobile}</div>
                     <div>{item.country}</div>
-
-                    <div>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          item.contactUsStatus === "PENDING"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : item.contactUsStatus === "RESOLVED"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {item.contactUsStatus}
-                      </span>
+                    <div title={item?.message} className="line-clamp-6">
+                      {item.message}
                     </div>
-
                     <div className="text-gray-500">
                       {formatIndianDateTime(item.createdAt)}
                     </div>

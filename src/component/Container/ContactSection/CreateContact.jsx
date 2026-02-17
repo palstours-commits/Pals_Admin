@@ -22,7 +22,7 @@ const CreateContact = ({ contactData, onClose }) => {
     mobile: "",
     country: "",
     message: "",
-    contactUsStatus: "PENDING",
+    // contactUsStatus: "PENDING",
   });
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const CreateContact = ({ contactData, onClose }) => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label className="text-sm font-medium block mb-1">Status</label>
             <select
               name="contactUsStatus"
@@ -158,7 +158,7 @@ const CreateContact = ({ contactData, onClose }) => {
               <option value="PENDING">Pending</option>
               <option value="RESOLVED">Resolved</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-4 pt-4">
             <button

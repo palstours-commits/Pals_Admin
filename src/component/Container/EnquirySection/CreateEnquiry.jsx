@@ -19,7 +19,6 @@ const CreateEnquiry = ({ enquiryData, onClose }) => {
   );
 
   const { packages } = useSelector((state) => state.package);
-  console.log(packages);
 
   useEffect(() => {
     dispatch(getPackages());
@@ -33,7 +32,6 @@ const CreateEnquiry = ({ enquiryData, onClose }) => {
     packageId: "",
     numberOfPersons: 1,
     specialRequest: "",
-    enquiryStatus: "PENDING",
     status: 1,
   });
 
@@ -44,10 +42,9 @@ const CreateEnquiry = ({ enquiryData, onClose }) => {
         phone: enquiryData?.phone || "",
         email: enquiryData?.email || "",
         date: enquiryData?.date?.slice(0, 10) || "",
-        packageId: enquiryData?.packageId || "",
+        packageId: enquiryData?.packageId._id || "",
         numberOfPersons: enquiryData?.numberOfPersons || 1,
         specialRequest: enquiryData?.specialRequest || "",
-        enquiryStatus: enquiryData?.enquiryStatus || "PENDING",
         status: enquiryData?.status ?? 1,
       });
     }
@@ -173,8 +170,8 @@ const CreateEnquiry = ({ enquiryData, onClose }) => {
                   onChange={(value) =>
                     setFormData({ ...formData, packageId: value })
                   }
-                  labelKey="packageName" 
-                  searchable 
+                  labelKey="packageName"
+                  searchable
                   placeholder="Select Package"
                 />
               </div>
@@ -191,22 +188,6 @@ const CreateEnquiry = ({ enquiryData, onClose }) => {
                   min={1}
                   className="py-2 border border-gray-300 rounded-md w-full ps-2 outline-0"
                 />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-1 block">
-                  Enquiry Status
-                </label>
-                <select
-                  name="enquiryStatus"
-                  value={formData.enquiryStatus}
-                  onChange={handleChange}
-                  className="py-2 border border-gray-300 rounded-md w-full ps-2 outline-0"
-                >
-                  <option value="PENDING">Pending</option>
-                  <option value="CONFIRMED">Confirmed</option>
-                  <option value="CANCELLED">Cancelled</option>
-                </select>
               </div>
             </div>
           </div>
