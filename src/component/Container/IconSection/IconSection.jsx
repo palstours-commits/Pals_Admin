@@ -18,7 +18,7 @@ import CreateIcon from "./CreateIcon";
 const IconSection = () => {
   const dispatch = useDispatch();
   const { icons, actionLoading, deletedMessage, deletedError } = useSelector(
-    (state) => state.icon
+    (state) => state.icon,
   );
 
   const [openModal, setOpenModal] = useState(false);
@@ -88,11 +88,10 @@ const IconSection = () => {
             animate={{ opacity: 1 }}
             className="bg-white rounded shadow overflow-x-auto"
           >
-            <div className="grid grid-cols-5 px-7 py-4 font-bold border-b">
+            <div className="grid grid-cols-5 px-7 py-4 font-bold border-b border-gray-300">
               <div>Name</div>
               <div>Created</div>
               <div>Icon</div>
-              <div>Status</div>
               <div className="text-right">Action</div>
             </div>
 
@@ -108,21 +107,10 @@ const IconSection = () => {
                 <div>{formatIndianDateTime(icon?.createdAt)}</div>
                 <div>
                   <Image
-                    src={icon?.imagePath}
+                    src={icon?.iconPath}
                     alt={icon?.name}
                     className="w-12 h-12"
                   />
-                </div>
-                <div>
-                  <span
-                    className={`px-4 py-2 rounded-xl font-semibold ${
-                      icon?.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {icon?.status}
-                  </span>
                 </div>
                 <div className="flex justify-end">
                   <DotMenu
@@ -135,8 +123,6 @@ const IconSection = () => {
                 </div>
               </motion.div>
             ))}
-
-            {/* Pagination */}
             <div className="flex justify-between items-center px-8 py-4">
               <p className="text-sm text-gray-600">
                 Showing {startIndex + 1} to{" "}
@@ -156,7 +142,6 @@ const IconSection = () => {
                 <button className="w-10 h-10 bg-green-800 text-white rounded-lg">
                   {currentPage}
                 </button>
-
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => p + 1)}

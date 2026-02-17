@@ -100,6 +100,11 @@ const Sidebar = ({ collapsed }) => {
                 </Link>
               </li>
               <li>
+                <Link to="/icon" className="hover:text-red-500">
+                  Icon
+                </Link>
+              </li>
+              <li>
                 <Link to="/submenu" className="hover:text-red-500">
                   Submenu
                 </Link>

@@ -6,6 +6,7 @@ import zoneReducer from "./slice/zoneSlice";
 import packageReducer from "./slice/packageSlice";
 import enquiryReducer from "./slice/enquirySlice";
 import contactusReducer from "./slice/contactusSlice";
+import IconReducer from "./slice/iconSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -14,5 +15,6 @@ const reducer = combineReducers({
   package: packageReducer,
   enquiry: enquiryReducer,
   contactus: contactusReducer,
+  icon: IconReducer,
 });
 export default reducer;

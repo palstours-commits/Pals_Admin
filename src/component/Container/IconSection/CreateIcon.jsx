@@ -16,35 +16,23 @@ const CreateIcon = ({ icon, onClose }) => {
 
   const [form, setForm] = useState({
     name: icon?.name || "",
-    slug: icon?.slug || "",
+    description: icon?.description || null,
     image: icon?.imagePath || null,
-    status: icon?.status || "Active",
   });
 
   useEffect(() => {
     if (icon) {
       setForm({
         name: icon.name || "",
-        slug: icon.slug || "",
-        image: icon.imagePath || null,
-        status: icon.status || "Active",
+        description: icon.description || "",
+        image: icon.iconPath || null,
       });
     }
   }, [icon]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "name") {
-      const slug = value
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "");
-
-      setForm((prev) => ({ ...prev, name: value, slug }));
-    } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
-    }
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (file) => {
@@ -54,11 +42,9 @@ const CreateIcon = ({ icon, onClose }) => {
   const handleSave = () => {
     const formData = new FormData();
     formData.append("name", form.name);
-    formData.append("slug", form.slug);
-    formData.append("status", form.status);
-
+    formData.append("description", form.description);
     if (form.image) {
-      formData.append("image", form.image);
+      formData.append("icon", form.image);
     }
 
     if (icon?._id) {
@@ -92,7 +78,7 @@ const CreateIcon = ({ icon, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-md rounded-sm shadow-xl">
-        <div className="flex justify-between items-center px-6 py-4 border-b">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-300">
           <h2 className="text-lg font-semibold">
             {icon ? "Update Icon" : "Create Icon"}
           </h2>
@@ -115,7 +101,21 @@ const CreateIcon = ({ icon, onClose }) => {
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-green-700"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md  outline-0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Description <span className="text-red-500">*</span>
+            </label>
+
+            <textarea
+              name="description"
+              rows={3}
+              value={form.description}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md outline-0"
+              placeholder="Enter description"
             />
           </div>
         </div>
