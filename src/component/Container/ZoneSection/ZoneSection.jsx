@@ -76,13 +76,13 @@ const Zonesection = () => {
     <>
       <div className="min-h-screen">
         <div className="flex justify-between items-center mb-6 px-8">
-          <h2 className="text-xl font-bold">Zone List</h2>
+          <h2 className="text-xl font-bold">Zone List ({zones?.length})</h2>
 
           <button
             onClick={() => setOpenModal(true)}
             className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
           >
-            + Create Zone ({zones?.length})
+            + Create Zone
           </button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">

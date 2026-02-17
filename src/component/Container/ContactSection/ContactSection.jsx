@@ -1,111 +1,165 @@
 "use client";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ContactList } from "../../../utils/dummyMockData";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import DotMenu from "../../../common/DotMenu";
+import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
+import { notifyAlert } from "../../../utils/notificationService";
+import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+
+import {
+  getContacts,
+  deleteContact,
+  clearContactError,
+  clearContactMessage,
+} from "../../../store/slice/contactusSlice";
+import CreateContact from "./CreateContact"; 
 
 const ContactSection = () => {
-  const [contacts, setContacts] = useState(ContactList);
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
 
-  const itemsPerPage = 5;
+  const { contacts, loading, deletedMessage, deletedError } = useSelector(
+    (state) => state.contactus
+  );
 
-  const totalPages = Math.ceil(contacts.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentContacts = contacts.slice(startIndex, startIndex + itemsPerPage);
+  const [openModal, setOpenModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectData, setSelectData] = useState(null);
+
+  useEffect(() => {
+    dispatch(getContacts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (deletedMessage) {
+      notifyAlert({
+        title: "Success",
+        message: deletedMessage,
+        type: "success",
+      });
+      dispatch(clearContactMessage());
+    }
+
+    if (deletedError) {
+      notifyAlert({
+        title: "Error",
+        message: deletedError,
+        type: "error",
+      });
+      dispatch(clearContactError());
+    }
+  }, [deletedMessage, deletedError, dispatch]);
+
+  const handleDelete = async () => {
+    await dispatch(deleteContact(deleteId));
+    setConfirmOpen(false);
+    setDeleteId(null);
+  };
 
   return (
-    <div className="min-h-screen px-6 py-10">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Contact List</h2>
-        </div>
+    <>
+      {openModal ? (
+        <CreateContact
+          contactData={selectData}
+          onClose={() => {
+            setOpenModal(false);
+            setSelectData(null);
+          }}
+        />
+      ) : (
+        <div className="min-h-screen px-6 py-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">
+                Contact Messages ({contacts?.length || 0})
+              </h2>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white rounded shadow overflow-x-auto"
-        >
-          <div className="grid grid-cols-6 px-7 py-4 font-bold border-b border-gray-300">
-            <div>Name</div>
-            <div>Email</div>
-            <div>Mobile</div>
-            <div>Persons</div>
-            <div>Plan</div>
-            <div className="text-right">Action</div>
-          </div>
-          {currentContacts.map((contact, index) => (
-            <motion.div
-              key={contact.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="grid grid-cols-6 px-8 py-5 items-center text-sm"
-            >
-              <div className="font-medium">
-                {contact.firstName} {contact.lastName}
-              </div>
-              <div className="text-gray-600">{contact.email}</div>
-              <div>{contact.mobile}</div>
-              <div>{contact.person}</div>
-              <div>
-                <span
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold ${
-                    contact.plan === "Premium"
-                      ? "bg-green-100 text-green-700"
-                      : contact.plan === "Standard"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {contact.plan}
-                </span>
-              </div>
-              <div className="flex justify-end relative group">
-                <button className="p-2 rounded-lg hover:bg-gray-100">⋮</button>
-
-                <div className="absolute right-0 top-10 w-44 bg-white rounded-xl shadow-lg border border-gray-300 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <button className="w-full text-left px-4 py-2 hover:bg-gray-50 cursor-pointer">
-                    Update
-                  </button>
-                  <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-b-xl cursor-pointer">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-          <div className="flex justify-between items-center px-8 py-4">
-            <p className="text-sm text-gray-600">
-              Showing {startIndex + 1} to{" "}
-              {Math.min(startIndex + itemsPerPage, contacts.length)} of{" "}
-              {contacts.length}
-            </p>
-
-            <div className="flex gap-3">
               <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => prev - 1)}
-                className="w-10 h-10 border rounded-lg flex items-center justify-center disabled:opacity-40"
+                onClick={() => {
+                  setSelectData(null);
+                  setOpenModal(true);
+                }}
+                className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
               >
-                <ChevronLeft size={18} />
-              </button>
-
-              <button className="w-10 h-10 rounded-lg bg-green-800 text-white">
-                {currentPage}
-              </button>
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((prev) => prev + 1)}
-                className="w-10 h-10 border rounded-lg flex items-center justify-center disabled:opacity-40"
-              >
-                <ChevronRight size={18} />
+                + Create Contact
               </button>
             </div>
+
+            <div className="bg-white rounded shadow overflow-x-auto">
+              <div className="grid grid-cols-7 px-7 py-4 font-bold border-b border-gray-300">
+                <div>Name</div>
+                <div>Email</div>
+                <div>Mobile</div>
+                <div>Country</div>
+                <div>Status</div>
+                <div>Created</div>
+                <div className="text-right">Action</div>
+              </div>
+
+              {contacts?.length > 0 ? (
+                contacts.map((item) => (
+                  <div
+                    key={item._id}
+                    className="grid grid-cols-7 px-8 py-5 text-sm items-center "
+                  >
+                    <div className="font-medium">{item.name}</div>
+                    <div className="truncate">{item.email}</div>
+                    <div>{item.mobile}</div>
+                    <div>{item.country}</div>
+
+                    <div>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          item.contactUsStatus === "PENDING"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : item.contactUsStatus === "RESOLVED"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {item.contactUsStatus}
+                      </span>
+                    </div>
+
+                    <div className="text-gray-500">
+                      {formatIndianDateTime(item.createdAt)}
+                    </div>
+
+                    <div className="flex justify-end">
+                      <DotMenu
+                        onEdit={() => {
+                          setSelectData(item);
+                          setOpenModal(true);
+                        }}
+                        onDelete={() => {
+                          setDeleteId(item._id);
+                          setConfirmOpen(true);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="px-8 py-10 text-center text-gray-500">
+                  No contact messages found
+                </div>
+              )}
+            </div>
           </div>
-        </motion.div>
-      </div>
-    </div>
+        </div>
+      )}
+
+      <ConfirmDeleteModal
+        isOpen={confirmOpen}
+        title="Are you sure you want to delete this contact?"
+        loading={loading}
+        onConfirm={handleDelete}
+        onCancel={() => {
+          setConfirmOpen(false);
+          setDeleteId(null);
+        }}
+      />
+    </>
   );
 };
 

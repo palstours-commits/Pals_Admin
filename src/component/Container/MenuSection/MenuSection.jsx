@@ -20,7 +20,7 @@ const MenuSection = () => {
   const { menus, actionLoading, deletedMessage, deletedError } = useSelector(
     (state) => state.menu,
   );
-  
+
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -73,13 +73,13 @@ const MenuSection = () => {
       <div className="min-h-screen px-6 py-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">Menu List</h2>
+            <h2 className="text-xl font-bold">Menu List ({menus?.length})</h2>
 
             <button
               onClick={() => setOpenModal(true)}
               className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
             >
-              + Create Menu ({menus?.length})
+              + Create Menu
             </button>
           </div>
 

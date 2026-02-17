@@ -4,11 +4,19 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  
+
   optimizeDeps: {
-    include: [
-      "@ckeditor/ckeditor5-react",
-      "@ckeditor/ckeditor5-build-classic",
-    ],
+    include: ["@ckeditor/ckeditor5-react", "@ckeditor/ckeditor5-build-classic"],
+  },
+  server: {
+    host: true,
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: "https://nominatim.openstreetmap.org",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
 });

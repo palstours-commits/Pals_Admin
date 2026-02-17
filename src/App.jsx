@@ -13,6 +13,7 @@ import Contact from "./pages/Contact/Contact";
 import Flight from "./pages/Flight/Flight";
 import Package from "./pages/Package/Package";
 import ViewPackage from "./pages/ViewPackage/ViewPackage";
+import Enquiry from "./pages/Enquiry/Enquiry";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/service/flight" element={<Flight />} />
         <Route path="/packages" element={<Package />} />
+        <Route path="/enquiry" element={<Enquiry />} />
         <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
       </Route>

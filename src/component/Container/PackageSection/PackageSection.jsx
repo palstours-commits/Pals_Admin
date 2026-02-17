@@ -63,13 +63,15 @@ const PackageSection = () => {
       ) : (
         <div className="min-h-screen">
           <div className="flex justify-between items-center mb-6 px-8">
-            <h2 className="text-xl font-bold">Package List</h2>
+            <h2 className="text-xl font-bold">
+              Package List ({packages?.length || 0})
+            </h2>
 
             <button
               onClick={() => setOpenModal(true)}
               className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
             >
-              + Create Package ({packages?.length || 0})
+              + Create Package
             </button>
           </div>
 

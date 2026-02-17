@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   FiHome,
   FiBox,
@@ -7,20 +7,24 @@ import {
   FiMail,
   FiHelpCircle,
   FiChevronDown,
+  FiMenu,
 } from "react-icons/fi";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
     <li className="relative group">
-      <Link
+      <NavLink
         to={to}
-        className={`flex items-center p-2 rounded-md hover:text-red-500
+        className={({ isActive }) =>
+          `flex items-center p-2 rounded-md transition
           ${collapsed ? "justify-center" : "gap-3"}
-        `}
+          ${isActive ? "text-red-500" : "text-gray-500 hover:text-red-500"}`
+        }
       >
         <Icon size={20} />
         {!collapsed && <span>{label}</span>}
-      </Link>
+      </NavLink>
+
       {collapsed && (
         <span
           className="absolute left-14 top-1/2 -translate-y-1/2
@@ -56,8 +60,60 @@ const Sidebar = ({ collapsed }) => {
           label="Dashboard"
           collapsed={collapsed}
         />
+        <li className="relative group">
+          <div
+            onClick={() => setOpenMenu(!openMenu)}
+            className={`flex items-center p-2 cursor-pointer hover:text-red-500
+      ${collapsed ? "justify-center" : "justify-between"}
+    `}
+          >
+            <div
+              className={`flex items-center font-semibold ${collapsed ? "" : "gap-3"}`}
+            >
+              <FiMenu size={20} />
+              {!collapsed && <span>Menu</span>}
+            </div>
+
+            {!collapsed && (
+              <FiChevronDown
+                className={`transition-transform ${
+                  openMenu ? "rotate-180" : ""
+                }`}
+              />
+            )}
+          </div>
+          {collapsed && (
+            <span
+              className="absolute left-14 top-1/2 -translate-y-1/2
+      bg-black text-white text-xs px-2 py-1 rounded
+      opacity-0 group-hover:opacity-100 transition
+      whitespace-nowrap z-50"
+            >
+              Menu
+            </span>
+          )}
+          {!collapsed && openMenu && (
+            <ul className="pl-10 mt-3 space-y-3 text-gray-400">
+              <li>
+                <Link to="/menus" className="hover:text-red-500">
+                  Menus
+                </Link>
+              </li>
+              <li>
+                <Link to="/submenu" className="hover:text-red-500">
+                  Submenu
+                </Link>
+              </li>
+              <li>
+                <Link to="/zone" className="hover:text-red-500">
+                  Zone
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
         <SidebarItem
-          to="/package"
+          to="/packages"
           icon={FiBox}
           label="Package"
           collapsed={collapsed}
@@ -93,7 +149,7 @@ const Sidebar = ({ collapsed }) => {
             </span>
           )}
           {!collapsed && openService && (
-            <ul className="pl-8 mt-3 space-y-3 text-gray-400">
+            <ul className="pl-10 mt-3 space-y-3 text-gray-400">
               <li>
                 <Link to="/service/hotel" className="hover:text-red-500">
                   Hotel
@@ -119,45 +175,6 @@ const Sidebar = ({ collapsed }) => {
           label="Enquiry"
           collapsed={collapsed}
         />
-        <li>
-          <div
-            onClick={() => setOpenMenu(!openMenu)}
-            className="flex items-center justify-between p-2 cursor-pointer hover:text-red-500"
-          >
-            {!collapsed && <span>Menu</span>}
-            {!collapsed && (
-              <FiChevronDown
-                className={`transition-transform ${
-                  openMenu ? "rotate-180" : ""
-                }`}
-              />
-            )}
-          </div>
-          {!collapsed && openMenu && (
-            <ul className="pl-6 mt-3 space-y-3 text-gray-400">
-              <li>
-                <Link to="/menus" className="hover:text-red-500">
-                  Menus
-                </Link>
-              </li>
-              <li>
-                <Link to="/submenu" className="hover:text-red-500">
-                  Submenu
-                </Link>
-              </li>
-              <li>
-                <Link to="/zone" className="hover:text-red-500">
-                  Zone
-                </Link>
-              </li>
-              <li>
-                <Link to="/packages" className="hover:text-red-500">
-                  Package
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
       </ul>
     </div>
   );

@@ -15,7 +15,7 @@ const Image = ({ src = "", alt = "image", className = "", style = {} }) => {
             className={className}
             style={style}
             onError={(e) => {
-                e.currentTarget.src = "/fallback.png";
+                e.currentTarget.src = "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg";
             }}
         />
     );

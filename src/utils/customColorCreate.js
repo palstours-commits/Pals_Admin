@@ -1,13 +1,21 @@
-export const statusColor = (status) => {
-  switch (status) {
-    case "Pending":
+export const statusColor = (status = "") => {
+  const normalized = status.toLowerCase();
+
+  switch (normalized) {
+    case "pending":
       return "bg-[#FDF1E6] text-[#F2994A]";
-    case "Booked":
+
+    case "booked":
+    case "confirmed":
       return "bg-[#E6F7EC] text-[#27AE60]";
-    case "Canceled":
+
+    case "canceled":
+    case "cancelled":
       return "bg-[#FDEAEA] text-[#EB5757]";
-    case "Refund":
+
+    case "refund":
       return "bg-[#FBE9E9] text-[#EB5757]";
+
     default:
       return "bg-gray-100 text-gray-600";
   }
