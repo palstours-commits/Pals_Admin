@@ -10,8 +10,10 @@ import {
   loginUser,
 } from "../../../store/slice/authSlice";
 import { notifyAlert } from "../../../utils/notificationService";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginSection = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, message, error, loading } = useSelector((state) => state.auth);
@@ -106,14 +108,24 @@ const LoginSection = () => {
                   <label className="text-sm font-semibold text-gray-700">
                     Password<span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="******"
-                    className="w-full mt-2 p-3 rounded-lg bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="******"
+                      className="w-full mt-2 p-3 pr-12 rounded-lg bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="checkbox" className="w-4 h-4 accent-red-600" />
