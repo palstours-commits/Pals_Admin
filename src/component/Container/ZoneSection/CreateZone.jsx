@@ -35,7 +35,7 @@ const CreateZone = ({ zone, onClose }) => {
       setFormData({
         name: zone.name || "",
         slug: zone.slug || "",
-        subMenuId: zone.subMenuId || "",
+        subMenuId: zone.subMenuId?._id || "",
         description: zone.description || "",
         image: zone.image || null,
       });
