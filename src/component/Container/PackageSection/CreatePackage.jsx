@@ -347,7 +347,7 @@ const CreatePackage = ({ packageData, onClose }) => {
                 <label className="text-sm font-medium mb-1 block">
                   Trip Highlights
                 </label>
-                <CKEditor
+                {/* <CKEditor
                   key={packageData?._id || "new"}
                   editor={ClassicEditor}
                   data={formData.tripHighlights}
@@ -360,7 +360,37 @@ const CreatePackage = ({ packageData, onClose }) => {
                       tripHighlights: editor.getData(),
                     })
                   }
-                />
+                /> */}
+                <CKEditor
+  key={packageData?._id || "new"}
+  editor={ClassicEditor}
+  data={formData.tripHighlights}
+  config={{
+    licenseKey: "GPL",
+    toolbar: [
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "|",
+      "link",
+      "|",
+      "undo",
+      "redo",
+    ],
+  }}
+  onChange={(e, editor) =>
+    setFormData({
+      ...formData,
+      tripHighlights: editor.getData(),
+    })
+  }
+/>
+
               </div>
               <div>
                 <label className="text-sm font-medium mb-1 block">
@@ -384,8 +414,23 @@ const CreatePackage = ({ packageData, onClose }) => {
                   editor={ClassicEditor}
                   data={formData.importantInfo}
                   config={{
-                    licenseKey: "GPL",
-                  }}
+    licenseKey: "GPL",
+    toolbar: [
+      "heading",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "|",
+      "link",
+      "|",
+      "undo",
+      "redo",
+    ],
+  }}
                   onChange={(e, editor) =>
                     setFormData({
                       ...formData,

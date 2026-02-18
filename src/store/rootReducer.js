@@ -7,6 +7,7 @@ import packageReducer from "./slice/packageSlice";
 import enquiryReducer from "./slice/enquirySlice";
 import contactusReducer from "./slice/contactusSlice";
 import IconReducer from "./slice/iconSlice";
+import bookingReducer from "./slice/bookingSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -16,5 +17,6 @@ const reducer = combineReducers({
   enquiry: enquiryReducer,
   contactus: contactusReducer,
   icon: IconReducer,
+  booking: bookingReducer,
 });
 export default reducer;
