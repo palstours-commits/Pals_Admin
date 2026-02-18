@@ -27,7 +27,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
   };
 
   return (
-    <header className="w-full h-25 bg-white flex items-center justify-evenly px-15 relative">
+    <header className="w-full h-25 bg-white flex items-center justify-between px-15 relative">
       <div className="flex items-center gap-4">
         <FiMenu
           size={24}
@@ -41,7 +41,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
         />
         <h1 className="text-lg md:text-2xl font-semibold">Dashboard</h1>
       </div>
-      <div className="w-[300px] relative hidden md:block">
+      {/* <div className="w-[300px] relative hidden md:block">
         <input
           type="text"
           placeholder="Search.."
@@ -51,7 +51,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
           size={20}
           className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
         />
-      </div>
+      </div> */}
       <div className="hidden md:flex items-center gap-8">
         {/* <div className="relative">
           <FiMail size={24} className="text-green-900 cursor-pointer" />

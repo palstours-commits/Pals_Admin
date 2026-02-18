@@ -55,7 +55,7 @@ const Sidebar = ({ collapsed }) => {
         />
       </div>
 
-      <ul className="space-y-4 text-sm font-semibold text-gray-500">
+      <ul className="space-y-4 text-sm md:text-[14px] font-semibold text-gray-500">
         <SidebarItem
           to="/"
           icon={FiHome}
@@ -95,28 +95,58 @@ const Sidebar = ({ collapsed }) => {
             </span>
           )}
           {!collapsed && openMenu && (
-            <ul className="pl-10 mt-3 space-y-3 text-gray-400">
-              <li>
-                <Link to="/menus" className="hover:text-red-500">
-                  Menus
-                </Link>
-              </li>
-              <li>
-                <Link to="/icon" className="hover:text-red-500">
-                  Icon
-                </Link>
-              </li>
-              <li>
-                <Link to="/submenu" className="hover:text-red-500">
-                  Submenu
-                </Link>
-              </li>
-              <li>
-                <Link to="/zone" className="hover:text-red-500">
-                  Zone
-                </Link>
-              </li>
-            </ul>
+            <ul className="pl-10 mt-3 space-y-2 text-[14px] text-gray-400">
+  
+  <li
+  className="
+    relative pl-6 cursor-pointer
+    transition-all duration-300
+    before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+    before:h-[2px] before:w-2 before:bg-gray-400
+    before:transition-all before:duration-300
+    hover:text-red-500
+    hover:pl-8
+    hover:before:w-5 hover:before:bg-red-500
+  "
+>
+    <Link to="/menus">Menus</Link>
+  </li>
+
+    <li className="relative pl-6 cursor-pointer
+      transition-all duration-300
+      before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+      before:h-[2px] before:w-2 before:bg-gray-400
+      before:transition-all before:duration-300
+      hover:text-red-500
+      hover:pl-8
+      hover:before:w-5 hover:before:bg-red-500">
+    <Link to="/icon">Icon</Link>
+  </li>
+
+  <li className="relative pl-6 cursor-pointer
+      transition-all duration-300
+      before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+      before:h-[2px] before:w-2 before:bg-gray-400
+      before:transition-all before:duration-300
+      hover:text-red-500
+      hover:pl-8
+      hover:before:w-5 hover:before:bg-red-500">
+    <Link to="/submenu">Submenu</Link>
+  </li>
+
+  <li className="relative pl-6 cursor-pointer
+      transition-all duration-300
+      before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+      before:h-[2px] before:w-2 before:bg-gray-400
+      before:transition-all before:duration-300
+      hover:text-red-500
+      hover:pl-8
+      hover:before:w-5 hover:before:bg-red-500">
+    <Link to="/zone">Zone</Link>
+  </li>
+
+</ul>
+
           )}
         </li>
         <SidebarItem
@@ -157,12 +187,34 @@ const Sidebar = ({ collapsed }) => {
           )}
           {!collapsed && openService && (
             <ul className="pl-10 mt-3 space-y-3 text-gray-400">
-              <li>
+              <li
+              className="
+                relative pl-6 cursor-pointer
+                transition-all duration-300
+                before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+                before:h-[2px] before:w-2 before:bg-gray-400
+                before:transition-all before:duration-300
+                hover:text-red-500
+                hover:pl-8
+                hover:before:w-5 hover:before:bg-red-500
+              "
+            >
                 <Link to="/service/hotel" className="hover:text-red-500">
                   Hotel
                 </Link>
               </li>
-              <li>
+              <li
+  className="
+    relative pl-6 cursor-pointer
+    transition-all duration-300
+    before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+    before:h-[2px] before:w-2 before:bg-gray-400
+    before:transition-all before:duration-300
+    hover:text-red-500
+    hover:pl-8
+    hover:before:w-5 hover:before:bg-red-500
+  "
+>
                 <Link to="/service/flight" className="hover:text-red-500">
                   Flight
                 </Link>
