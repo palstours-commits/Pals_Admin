@@ -10,6 +10,8 @@ import {
   FiMenu,
 } from "react-icons/fi";
 
+import { MdDateRange } from "react-icons/md"; 
+
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
     <li className="relative group">
@@ -168,6 +170,14 @@ const Sidebar = ({ collapsed }) => {
             </ul>
           )}
         </li>
+
+         <SidebarItem
+          to="/booking"
+          icon={MdDateRange}
+          label="Booking"
+          collapsed={collapsed}
+        />
+
         <SidebarItem
           to="/contact"
           icon={FiMail}

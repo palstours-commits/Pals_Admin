@@ -27,7 +27,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
   };
 
   return (
-    <header className="w-full h-25 bg-white flex items-center justify-between px-15 relative">
+    <header className="w-full h-25 bg-white flex items-center justify-evenly px-15 relative">
       <div className="flex items-center gap-4">
         <FiMenu
           size={24}
@@ -53,19 +53,19 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
         />
       </div>
       <div className="hidden md:flex items-center gap-8">
-        <div className="relative">
+        {/* <div className="relative">
           <FiMail size={24} className="text-green-900 cursor-pointer" />
           <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full">
             76
           </span>
-        </div>
+        </div> */}
         <div className="relative">
           <FiBell size={24} className="text-green-900 cursor-pointer" />
           <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full">
             4
           </span>
         </div>
-        <div className="relative">
+        {/* <div className="relative">
           <FiMessageSquare
             size={24}
             className="text-green-900 cursor-pointer"
@@ -73,7 +73,7 @@ const Header = ({ toggleSidebar, collapsed, toggleMobile }) => {
           <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full">
             15
           </span>
-        </div>
+        </div> */}
         <div
           className="relative"
           onMouseEnter={() => setOpen(true)}

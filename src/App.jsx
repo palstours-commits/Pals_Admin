@@ -15,6 +15,7 @@ import Package from "./pages/Package/Package";
 import ViewPackage from "./pages/ViewPackage/ViewPackage";
 import Enquiry from "./pages/Enquiry/Enquiry";
 import IconPage from "./pages/Icon/Icon";
+import Booking from "./pages/Booking/Booking";
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ function App() {
         <Route path="icon" element={<IconPage />} />
         <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/booking" element={<Booking />} />
       </Route>
     </Routes>
   );

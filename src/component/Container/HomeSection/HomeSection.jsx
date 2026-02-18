@@ -75,7 +75,7 @@ const HomeSection = () => {
             animate={{ opacity: 1 }}
             className="bg-white rounded shadow mt-8 overflow-x-auto scrollbar-hide"
           >
-            <div className="min-w-[1200px]">
+            <div className="">
               <div className="grid grid-cols-13 px-8 py-4 text-md font-bold text-black border-b border-gray-300">
                 <div className="col-span-2">Guest</div>
                 <div className="col-span-2">Date Order</div>

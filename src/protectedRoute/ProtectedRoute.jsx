@@ -48,7 +48,7 @@ const ProtectedLayout = () => {
           toggleMobile={() => setMobileOpen(!mobileOpen)}
         />
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-100">
+        <div className="flex-1 overflow-y-auto p-4 md:py-10 md:px-0 bg-gray-100">
           <Outlet />
         </div>
       </div>
