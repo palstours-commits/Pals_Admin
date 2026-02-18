@@ -414,23 +414,23 @@ const CreatePackage = ({ packageData, onClose }) => {
                   editor={ClassicEditor}
                   data={formData.importantInfo}
                   config={{
-    licenseKey: "GPL",
-    toolbar: [
-      "heading",
-      "|",
-      "bold",
-      "italic",
-      "underline",
-      "|",
-      "bulletedList",
-      "numberedList",
-      "|",
-      "link",
-      "|",
-      "undo",
-      "redo",
-    ],
-  }}
+                  licenseKey: "GPL",
+                  toolbar: [
+                    "heading",
+                    "|",
+                    "bold",
+                    "italic",
+                    "underline",
+                    "|",
+                    "bulletedList",
+                    "numberedList",
+                    "|",
+                    "link",
+                    "|",
+                    "undo",
+                    "redo",
+                  ],
+                }}
                   onChange={(e, editor) =>
                     setFormData({
                       ...formData,

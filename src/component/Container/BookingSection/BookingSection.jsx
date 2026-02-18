@@ -30,7 +30,7 @@ const BookingSection = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectData, setSelectData] = useState(null);
-
+  
   useEffect(() => {
     dispatch(getBookings());
   }, [dispatch]);
@@ -101,8 +101,8 @@ const handleDelete = async () => {
                 + Create Booking
               </button>
             </div>
-            <div className="bg-white rounded shadow overflow-x-auto">
-              <div className="grid grid-cols-8 px-7 py-4 font-bold border-b border-gray-300">
+            {/* <div className="bg-white rounded shadow overflow-x-auto">
+              <div className="grid grid-cols-10 px-7 py-4 font-bold border-b border-gray-300">
                 <div>Customer</div>
                 <div>Email</div>
                 <div>Mobile</div>
@@ -113,20 +113,13 @@ const handleDelete = async () => {
                 <div>No Of Days</div>
                 <div>Status</div>
                 <div>Action</div>
-
-                {/* <div>Destination</div>
-                <div>Date</div>
-                <div>Persons</div> */}
-                {/* <div>Status</div>
-                <div>Created</div>
-                <div className="text-right">Action</div> */}
               </div>
 
               {bookings?.length > 0 ? (
                 bookings.map((item) => (
                   <div
                     key={item._id}
-                    className="grid grid-cols-7 px-8 py-5 text-sm items-center"
+                    className="grid grid-cols-10 px-8 py-5 text-sm items-center"
                   >
                     <div>{item.firstName} {item.lastName}</div>
                     <div>{item.email}</div>
@@ -145,27 +138,7 @@ const handleDelete = async () => {
                     <div>
                         {item.bookingStatus}
                     </div>
-                    
-                    {/* <div>{item.destination}</div> */}
-                    {/* <div>{item.travelDate}</div>
-                    <div>{item.numberOfPassengers}</div> */}
-
-                    {/* <div>
-                      <span
-                        className={`px-2 py-1 text-xs rounded text-white ${
-                          item.status === "Confirmed"
-                            ? "bg-green-600"
-                            : "bg-yellow-500"
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </div> */}
-
-                    {/* <div className="text-gray-500">
-                      {formatIndianDateTime(item.createdAt)}
-                    </div> */}
-
+                   
                     <div className="flex justify-end">
                       <DotMenu
                         onEdit={() => {
@@ -185,7 +158,91 @@ const handleDelete = async () => {
                   No bookings found
                 </div>
               )}
-            </div>
+            </div> */}
+            <div className="bg-white rounded shadow overflow-x-auto">
+  <table className="min-w-full text-sm text-left">
+    <thead className="bg-gray-100 border-b">
+      <tr>
+        <th className="px-4 py-3">Customer</th>
+        <th className="px-4 py-3">Email</th>
+        <th className="px-4 py-3">Mobile</th>
+        <th className="px-4 py-3">Country</th>
+        <th className="px-4 py-3">Persons</th>
+        <th className="px-4 py-3">Departure</th>
+        <th className="px-4 py-3">Return</th>
+        <th className="px-4 py-3">Days</th>
+        <th className="px-4 py-3">Status</th>
+        <th className="px-4 py-3 text-right">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {bookings?.length > 0 ? (
+        bookings.map((item) => (
+          <tr key={item._id} className="border-b hover:bg-gray-50">
+            <td className="px-4 py-4 whitespace-nowrap">
+              {item.firstName} {item.lastName}
+            </td>
+
+            <td className="px-4 py-4 break-all max-w-[200px]">
+              {item.email}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {item.mobile}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {item.country}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {item.numberOfPersons}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {formatIndianDateTime(item.departureDate)}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {formatIndianDateTime(item.returnDate)}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              {item.numberOfDaysPreference}
+            </td>
+
+            <td className="px-4 py-4 whitespace-nowrap">
+              <span className="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800">
+                {item.bookingStatus}
+              </span>
+            </td>
+
+            <td className="px-4 py-4 text-right">
+              <DotMenu
+                onEdit={() => {
+                  setSelectData(item);
+                  setOpenModal(true);
+                }}
+                onDelete={() => {
+                  setDeleteId(item._id);
+                  setConfirmOpen(true);
+                }}
+              />
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="10" className="text-center py-10 text-gray-500">
+            No bookings found
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+
           </div>
         </div>
       )}

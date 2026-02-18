@@ -35,34 +35,32 @@ const CreateBooking = ({ bookingData, onClose }) => {
         departureDate: "",
         returnDate: "",
         numberOfDaysPreference: "",
-        specialRequest: "",
-        status: 1,
+        message: "",
     });
 
     useEffect(() => {
-  if (bookingData) {
-    setFormData({
-      firstName: bookingData?.firstName || "",
-      lastName: bookingData?.lastName || "",
-      email: bookingData?.email || "",
-      mobile: bookingData?.mobile || "",
-      country: bookingData?.country || "",
+        if (bookingData) {
+            console.log("Booking data received for editing:", bookingData);
+            setFormData({
+                firstName: bookingData?.firstName || "",
+                lastName: bookingData?.lastName || "",
+                email: bookingData?.email || "",
+                mobile: bookingData?.mobile || "",
+                country: bookingData?.country || "",
+                destinationOrPackage:
+                    typeof bookingData?.destinationOrPackage === "object"
+                        ? bookingData.destinationOrPackage._id
+                        : bookingData?.destinationOrPackage || "",
 
-      destinationOrPackage:
-        typeof bookingData?.destinationOrPackage === "object"
-          ? bookingData.destinationOrPackage._id
-          : bookingData?.destinationOrPackage || "",
-
-      numberOfPersons: bookingData?.numberOfPersons || 1,
-      departureDate: bookingData?.departureDate?.slice(0, 10) || "",
-      returnDate: bookingData?.returnDate?.slice(0, 10) || "",
-      numberOfDaysPreference:
-        bookingData?.numberOfDaysPreference || "",
-      specialRequest: bookingData?.specialRequest || "",
-      status: bookingData?.status ?? 1,
-    });
-  }
-}, [bookingData]);
+                numberOfPersons: bookingData?.numberOfPersons || 1,
+                departureDate: bookingData?.departureDate?.slice(0, 10) || "",
+                returnDate: bookingData?.returnDate?.slice(0, 10) || "",
+                numberOfDaysPreference:
+                    bookingData?.numberOfDaysPreference || "",
+                message: bookingData?.message || "",
+            });
+        }
+    }, [bookingData]);
 
 
     const handleChange = (e) => {
@@ -201,8 +199,8 @@ const CreateBooking = ({ bookingData, onClose }) => {
                                 </label>
                                 <textarea
                                     rows={4}
-                                    name="specialRequest"
-                                    value={formData.specialRequest}
+                                    name="message"
+                                    value={formData.message}
                                     onChange={handleChange}
                                     className="border border-gray-300 rounded-lg p-3 w-full outline-0"
                                 />
