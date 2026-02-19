@@ -19,7 +19,6 @@ const FlightBookingSection = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Flight Booking List</h2>
         </div>
-
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

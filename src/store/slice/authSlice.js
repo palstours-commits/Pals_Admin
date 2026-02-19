@@ -60,13 +60,6 @@ export const fetchMe = createAsyncThunk("auth/fetchMe", async (_, thunkAPI) => {
   }
 });
 
-export const checkAndRefreshToken = () => (dispatch) => {
-  const expiry = localStorage.getItem("tokenExpiry");
-  if (expiry && Date.now() > expiry) {
-    dispatch(refreshToken());
-  }
-};
-
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -78,7 +71,6 @@ const authSlice = createSlice({
     error: null,
     message: null,
   },
-
   reducers: {
     logout(state) {
       state.user = null;
