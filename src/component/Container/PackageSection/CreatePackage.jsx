@@ -30,6 +30,7 @@ const CreatePackage = ({ packageData, onClose }) => {
   const [formData, setFormData] = useState({
     zoneId: "",
     packageName: "",
+    slug: "",
     destinations: "",
     days: "",
     nights: "",
@@ -56,6 +57,7 @@ const CreatePackage = ({ packageData, onClose }) => {
         days: packageData?.days || "",
         nights: packageData?.nights || "",
         images: [],
+        slug: packageData?.slug || "",
         overview: packageData?.overview?.Description || "",
         tripHighlights: packageData?.tripHighlights || "",
         itinerary: packageData?.itinerary || [],
@@ -70,10 +72,25 @@ const CreatePackage = ({ packageData, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+
+    if (name === "packageName") {
+      const slug = value
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]+/g, "");
+
+      setFormData({
+        ...formData,
+        packageName: value,
+        slug,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
 
   const handleImages = (files) => {
@@ -362,35 +379,34 @@ const CreatePackage = ({ packageData, onClose }) => {
                   }
                 /> */}
                 <CKEditor
-  key={packageData?._id || "new"}
-  editor={ClassicEditor}
-  data={formData.tripHighlights}
-  config={{
-    licenseKey: "GPL",
-    toolbar: [
-      "heading",
-      "|",
-      "bold",
-      "italic",
-      "underline",
-      "|",
-      "bulletedList",
-      "numberedList",
-      "|",
-      "link",
-      "|",
-      "undo",
-      "redo",
-    ],
-  }}
-  onChange={(e, editor) =>
-    setFormData({
-      ...formData,
-      tripHighlights: editor.getData(),
-    })
-  }
-/>
-
+                  key={packageData?._id || "new"}
+                  editor={ClassicEditor}
+                  data={formData.tripHighlights}
+                  config={{
+                    licenseKey: "GPL",
+                    toolbar: [
+                      "heading",
+                      "|",
+                      "bold",
+                      "italic",
+                      "underline",
+                      "|",
+                      "bulletedList",
+                      "numberedList",
+                      "|",
+                      "link",
+                      "|",
+                      "undo",
+                      "redo",
+                    ],
+                  }}
+                  onChange={(e, editor) =>
+                    setFormData({
+                      ...formData,
+                      tripHighlights: editor.getData(),
+                    })
+                  }
+                />
               </div>
               <div>
                 <label className="text-sm font-medium mb-1 block">
@@ -414,23 +430,23 @@ const CreatePackage = ({ packageData, onClose }) => {
                   editor={ClassicEditor}
                   data={formData.importantInfo}
                   config={{
-                  licenseKey: "GPL",
-                  toolbar: [
-                    "heading",
-                    "|",
-                    "bold",
-                    "italic",
-                    "underline",
-                    "|",
-                    "bulletedList",
-                    "numberedList",
-                    "|",
-                    "link",
-                    "|",
-                    "undo",
-                    "redo",
-                  ],
-                }}
+                    licenseKey: "GPL",
+                    toolbar: [
+                      "heading",
+                      "|",
+                      "bold",
+                      "italic",
+                      "underline",
+                      "|",
+                      "bulletedList",
+                      "numberedList",
+                      "|",
+                      "link",
+                      "|",
+                      "undo",
+                      "redo",
+                    ],
+                  }}
                   onChange={(e, editor) =>
                     setFormData({
                       ...formData,

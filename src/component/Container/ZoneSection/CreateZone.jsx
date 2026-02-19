@@ -12,6 +12,7 @@ import { getSubMenus } from "../../../store/slice/submenuSlice";
 import ImageUpload from "../../../common/ImageUpload";
 import SingleSelectDropdown from "../../../common/SingleSelectDropdown";
 import { notifyAlert } from "../../../utils/notificationService";
+import { Toggle } from "../../../common/Toggle";
 
 const CreateZone = ({ zone, onClose }) => {
   const dispatch = useDispatch();
@@ -24,6 +25,8 @@ const CreateZone = ({ zone, onClose }) => {
     subMenuId: "",
     description: "",
     image: null,
+    istopdestination: false,
+    istrending: false,
   });
 
   useEffect(() => {
@@ -38,6 +41,8 @@ const CreateZone = ({ zone, onClose }) => {
         subMenuId: zone.subMenuId?._id || "",
         description: zone.description || "",
         image: zone.image || null,
+        istrending: zone?.istrending,
+        istopdestination: zone?.istopdestination,
       });
     }
   }, [zone]);
@@ -84,6 +89,8 @@ const CreateZone = ({ zone, onClose }) => {
     payload.append("slug", formData.slug);
     payload.append("subMenuId", formData.subMenuId);
     payload.append("description", formData.description);
+    payload.append("istrending", formData.istrending);
+    payload.append("istopdestination", formData.istopdestination);
     if (formData.image instanceof File) {
       payload.append("image", formData.image);
     }
@@ -146,6 +153,23 @@ const CreateZone = ({ zone, onClose }) => {
               onChange={handleChange}
               rows={3}
               className="w-full border px-4 py-2 rounded-md outline-0 border-gray-300"
+            />
+          </div>
+          <div className="space-y-4 flex justify-between">
+            <Toggle
+              label="Trending Zone"
+              checked={formData.istrending}
+              onChange={(value) =>
+                setFormData({ ...formData, istrending: value })
+              }
+            />
+
+            <Toggle
+              label="Top Destination"
+              checked={formData.istopdestination}
+              onChange={(value) =>
+                setFormData({ ...formData, istopdestination: value })
+              }
             />
           </div>
           <div className="flex justify-end gap-3 px-6   bg-gray-50">
