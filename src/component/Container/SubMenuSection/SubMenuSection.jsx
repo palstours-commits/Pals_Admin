@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
 import Image from "../../../common/Image";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";
@@ -14,6 +13,7 @@ import {
   deleteSubMenu,
   getSubMenus,
 } from "../../../store/slice/submenuSlice";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
 
 const SubMenuSection = () => {
   const dispatch = useDispatch();

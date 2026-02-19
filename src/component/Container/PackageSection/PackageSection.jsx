@@ -6,7 +6,8 @@ import DotMenu from "../../../common/DotMenu";
 import CreatePackage from "./CreatePackage";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
+
 
 import {
   getPackages,

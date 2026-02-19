@@ -10,7 +10,8 @@ import {
   getEnquiries,
 } from "../../../store/slice/enquirySlice";
 import CreateEnquiry from "./CreateEnquiry";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
+
 import Pagination from "../../../common/Pagination";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";

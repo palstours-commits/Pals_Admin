@@ -8,7 +8,7 @@ import {
   deleteIcon,
   getIcons,
 } from "../../../store/slice/iconSlice";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
 import Image from "../../../common/Image";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";

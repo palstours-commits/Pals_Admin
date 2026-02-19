@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DotMenu from "../../../common/DotMenu";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
 
 import {
   getContacts,

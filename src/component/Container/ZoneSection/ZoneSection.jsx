@@ -10,7 +10,7 @@ import {
 } from "../../../store/slice/zoneSlice";
 import { useEffect, useState } from "react";
 import Image from "../../../common/Image";
-import { formatIndianDateTime } from "../../../store/slice/formatDateTime";
+import { formatIndianDateTime } from "../../../utils/formatDateTime";
 import CreateZone from "./CreateZone";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";
