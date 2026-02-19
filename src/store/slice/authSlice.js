@@ -64,6 +64,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
+    adminData: null,
     accessToken: null,
     profileLoading: false,
     refreshToken: null,
@@ -123,14 +124,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchMe.fulfilled, (state, action) => {
         state.profileLoading = false;
-        state.user = {
-          _id: action.payload._id,
-          firstName: action.payload.firstName,
-          lastName: action.payload.lastName,
-          email: action.payload.email,
-          type: action.payload.type,
-          status: action.payload.status,
-        };
+        state.adminData = action.payload;
       })
       .addCase(fetchMe.rejected, (state, action) => {
         state.profileLoading = false;

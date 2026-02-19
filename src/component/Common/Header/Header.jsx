@@ -61,10 +61,15 @@ const Header = ({ toggleSidebar, toggleMobile }) => {
           />
           {open && (
             <div className="absolute right-0 pt-4 w-48 bg-white rounded-2xl shadow-xl border border-gray-200 p-3 z-50">
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+              <Link
+                to="/profile"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100"
+              >
                 <FiUser className="text-red-500" />
-                <Link to="/profile" className="text-gray-700">Profile</Link>
-              </div>
+                <span className="text-gray-700">Profile</span>
+              </Link>
+
               <div
                 onClick={handleLogout}
                 className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
