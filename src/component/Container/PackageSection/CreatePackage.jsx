@@ -26,6 +26,7 @@ const CreatePackage = ({ packageData, onClose }) => {
   );
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [selectedSubMenuId, setSelectedSubMenuId] = useState("");
 
   const [formData, setFormData] = useState({
     zoneId: "",
@@ -67,8 +68,19 @@ const CreatePackage = ({ packageData, onClose }) => {
         isTrending: packageData?.isTrending || false,
       });
       setExistingImages(packageData?.images || []);
+      if (packageData?.zoneId?.subMenuId?._id) {
+        setSelectedSubMenuId(packageData.zoneId.subMenuId._id);
+      }
     }
   }, [packageData]);
+
+  const subMenus = [
+    ...new Map(zones?.map((z) => [z?.subMenuId?._id, z?.subMenuId])).values(),
+  ];
+
+  const filteredZones = selectedSubMenuId
+    ? zones?.filter((z) => z?.subMenuId?._id === selectedSubMenuId)
+    : [];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -173,17 +185,44 @@ const CreatePackage = ({ packageData, onClose }) => {
               <div className="space-y-6">
                 <div>
                   <label className="text-sm font-medium mb-1 block">
+                    Holiday Type *
+                  </label>
+
+                  <SingleSelectDropdown
+                    options={subMenus}
+                    value={selectedSubMenuId}
+                    onChange={(value) => {
+                      setSelectedSubMenuId(value);
+                      setFormData({ ...formData, zoneId: "" });
+                    }}
+                    placeholder="Select Holiday Type"
+                    labelKey="name"
+                    valueKey="_id"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
                     Zone *
                   </label>
+
                   <SingleSelectDropdown
-                    options={zones}
+                    options={filteredZones}
                     value={formData.zoneId}
                     onChange={(value) =>
                       setFormData({ ...formData, zoneId: value })
                     }
-                    placeholder="Select Zone"
+                    placeholder={
+                      selectedSubMenuId
+                        ? "Select Zone"
+                        : "Select Holiday Type First"
+                    }
+                    disabled={!selectedSubMenuId}
+                    labelKey="name"
+                    valueKey="_id"
                   />
                 </div>
+
                 <div>
                   <label className="text-sm font-medium mb-1 block">
                     packageName *
@@ -364,20 +403,6 @@ const CreatePackage = ({ packageData, onClose }) => {
                 <label className="text-sm font-medium mb-1 block">
                   Trip Highlights
                 </label>
-                {/* <CKEditor
-                  key={packageData?._id || "new"}
-                  editor={ClassicEditor}
-                  data={formData.tripHighlights}
-                  config={{
-                    licenseKey: "GPL",
-                  }}
-                  onChange={(e, editor) =>
-                    setFormData({
-                      ...formData,
-                      tripHighlights: editor.getData(),
-                    })
-                  }
-                /> */}
                 <CKEditor
                   key={packageData?._id || "new"}
                   editor={ClassicEditor}
