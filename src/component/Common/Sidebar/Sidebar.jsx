@@ -8,6 +8,7 @@ import {
   FiHelpCircle,
   FiChevronDown,
   FiMenu,
+  FiGrid,
 } from "react-icons/fi";
 
 import { MdDateRange } from "react-icons/md";
@@ -62,6 +63,13 @@ const Sidebar = ({ collapsed }) => {
           label="Dashboard"
           collapsed={collapsed}
         />
+        <SidebarItem
+          to="/icon"
+          icon={FiGrid}
+          label="Icon"
+          collapsed={collapsed}
+        />
+
         <li className="relative group">
           <div
             onClick={() => setOpenMenu(!openMenu)}
@@ -109,19 +117,6 @@ const Sidebar = ({ collapsed }) => {
   "
               >
                 <Link to="/menus">Menus</Link>
-              </li>
-
-              <li
-                className="relative pl-6 cursor-pointer
-      transition-all duration-300
-      before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-      before:h-[3px] before:w-2 before:bg-gray-400
-      before:transition-all before:duration-300
-      hover:text-red-500
-      hover:pl-8
-      hover:before:w-5 hover:before:bg-red-500"
-              >
-                <Link to="/icon">Icon</Link>
               </li>
 
               <li

@@ -110,7 +110,7 @@ const Zonesection = () => {
                 <Image
                   src={zone.image}
                   alt={zone.name}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transform transition duration-600 hover:scale-105 cursor-pointer"
                 />
               </div>
               <div className="p-5">
