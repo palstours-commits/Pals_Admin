@@ -5,14 +5,12 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (payload, thunkAPI) => {
     try {
-
       const response = await FetchApi({
         endpoint: `/admins/login`,
         method: "POST",
         body: payload,
       });
 
-      
       if (response?.data?.success === false) {
         return thunkAPI.rejectWithValue(response?.data?.errors);
       }
@@ -61,6 +59,7 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.accessToken = null;
+      localStorage.clear();
     },
     clearError(state) {
       state.error = null;

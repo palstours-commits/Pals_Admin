@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     if (accessToken) {
-      setupTokenRefresh(dispatch);
+      setupTokenRefresh();
     }
   }, [accessToken, dispatch]);
 

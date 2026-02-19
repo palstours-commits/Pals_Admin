@@ -1,199 +1,149 @@
-import { motion } from "framer-motion";
-import { BiChevronDown } from "react-icons/bi";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { dummyGuests } from "../../../utils/dummyMockData";
-import { statusColor } from "../../../utils/customColorCreate";
+"use client";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Bed, Layers, MapPin, ListTree, Package } from "lucide-react";
+
+import StatCard from "../../../common/AnimatedNumber";
+import { Calendar } from "../../../common/Calendar";
+import { BookingList } from "../../../common/BookingList";
+import {
+  getDashboardBookings,
+  getDashboardCounts,
+} from "../../../store/slice/dashboardSlice";
+
+const statsConfig = [
+  {
+    key: "bookingCount",
+    label: "Bookings",
+    icon: Bed,
+    iconBg: "bg-red-500",
+    iconColor: "text-white",
+  },
+  {
+    key: "menuCount",
+    label: "Menus",
+    icon: Layers,
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+  },
+  {
+    key: "zoneCount",
+    label: "Zones",
+    icon: MapPin,
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+  },
+  {
+    key: "subMenuCount",
+    label: "Sub Menus",
+    icon: ListTree,
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+  },
+  {
+    key: "packageCount",
+    label: "Packages",
+    icon: Package,
+    iconBg: "bg-red-100",
+    iconColor: "text-red-500",
+  },
+];
+
+const statsData = {
+  Daily: [
+    { title: "Contact", value: 128, change: "+2.5%" },
+    { title: "Flight", value: 64, change: "+1.2%" },
+    { title: "Hotel", value: 92, change: "+3.1%" },
+  ],
+  Weekly: [
+    { title: "Contact", value: 842, change: "+4.8%" },
+    { title: "Flight", value: 410, change: "+2.6%" },
+    { title: "Hotel", value: 675, change: "+5.4%" },
+  ],
+  Monthly: [
+    { title: "Contact", value: 3451, change: "+6.2%" },
+    { title: "Flight", value: 2041, change: "+3.9%" },
+    { title: "Hotel", value: 2890, change: "+7.1%" },
+  ],
+};
 
 const HomeSection = () => {
-  const [open, setOpen] = useState(false);
-  const [sort, setSort] = useState("Newest");
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("Monthly");
+  const { counts, loading } = useSelector((state) => state.dashboard);
+
+  useEffect(() => {
+    dispatch(getDashboardCounts());
+    dispatch(getDashboardBookings());
+  }, [dispatch]);
+
+  const handleCalendarChange = (date) => {
+    const formatDate = (date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    };
+    dispatch(getDashboardBookings(formatDate(date)));
+  };
+
   return (
-    <>
-      <div className="min-h-screen px-6 py-10 ">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center flex-wrap gap-4">
-            <div className="overflow-x-auto">
-              <div className="flex items-center gap-6 text-sm font-medium whitespace-nowrap min-w-max">
-                {["All Guest", "Pending", "Booked", "Canceled", "Refund"]?.map(
-                  (tab, idx) => (
-                    <button
-                      key={tab}
-                      className={`pb-3 transition-all ${
-                        idx === 0
-                          ? "border-b-2 border-[#14532D] text-[#14532D]"
-                          : "text-slate-500 hover:text-slate-800"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ),
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="bg-[#14532D] text-white px-6 py-3 rounded-xl font-medium shadow-sm">
-                02/13/2026
-              </div>
-              <div className="relative inline-block">
-                <div
-                  onClick={() => setOpen(!open)}
-                  className="bg-white border border-gray-200 px-7  py-3 rounded-lg flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer"
+    <div className="px-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5">
+        {statsConfig?.map((item) => {
+          const Icon = item.icon;
+          return (
+            <StatCard
+              key={item.key}
+              value={counts?.[item.key] || 0}
+              label={item.label}
+              icon={<Icon className={`h-6 w-6 ${item.iconColor}`} />}
+              iconBg={item.iconBg}
+              loading={loading}
+            />
+          );
+        })}
+      </div>
+      <div className="grid md:grid-cols-2 my-10 gap-6">
+        <div className=" rounded-2xl bg-white p-6 shadow-md">
+          <Calendar onChange={handleCalendarChange} />
+          <div className="my-6 h-px bg-gray-100" />
+          <BookingList />
+        </div>
+        <div className="bg-white rounded-xl shadow p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold">Reservation Stats</h2>
+            <div className="flex gap-6 text-sm font-medium">
+              {["Daily", "Weekly", "Monthly"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`pb-1 border-b-2 transition ${
+                    activeTab === tab
+                      ? "border-green-600 text-green-600"
+                      : "border-transparent text-gray-500"
+                  }`}
                 >
-                  {sort}
-                  <BiChevronDown size={18} className="text-gray-400" />
-                </div>
-                {open && (
-                  <div className="absolute top-full mt-2 w-32 bg-gray-100 rounded-lg shadow-md py-2 z-50">
-                    <div
-                      onClick={() => {
-                        setSort("Oldest");
-                        setOpen(false);
-                      }}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-200 cursor-pointer"
-                    >
-                      Oldest
-                    </div>
-
-                    <div
-                      onClick={() => {
-                        setSort("Newest");
-                        setOpen(false);
-                      }}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-200 cursor-pointer"
-                    >
-                      Newest
-                    </div>
-                  </div>
-                )}
-              </div>
+                  {tab}
+                </button>
+              ))}
             </div>
           </div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-white rounded shadow mt-8 overflow-x-auto scrollbar-hide"
-          >
-            <div className="">
-              <div className="grid grid-cols-13 px-8 py-4 text-md font-bold text-black border-b border-gray-300">
-                <div className="col-span-2">Guest</div>
-                <div className="col-span-2">Date Order</div>
-                <div className="col-span-2">Check In</div>
-                <div className="col-span-2">Check Out</div>
-                <div className="col-span-2">Special Request</div>
-                <div className="col-span-1">Room Type</div>
-                <div className="col-span-1">Status</div>
-                <div className="col-span-1 text-right">Action</div>
-              </div>
-              {dummyGuests?.map((guest, index) => (
-                <motion.div
-                  key={guest.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="grid grid-cols-13 px-8 py-5 text-sm items-center"
-                >
-                  <div className="col-span-2">
-                    <div className="font-semibold text-slate-800">
-                      {guest.name}
-                    </div>
-                    <div className="text-xs text-red-500 mt-1">
-                      {guest.empId}
-                    </div>
-                  </div>
-
-                  <div className="col-span-2 text-slate-600">
-                    {guest.dateOrder}
-                  </div>
-
-                  <div className="col-span-2">
-                    <div className="font-semibold text-slate-800">
-                      {guest.checkIn}
-                    </div>
-                    <div className="text-slate-500 text-xs">
-                      {guest.checkInTime}
-                    </div>
-                  </div>
-
-                  <div className="col-span-2">
-                    <div className="font-semibold text-slate-800">
-                      {guest.checkOut}
-                    </div>
-                    <div className="text-slate-500 text-xs">
-                      {guest.checkOutTime}
-                    </div>
-                  </div>
-
-                  <div className="col-span-2">
-                    <button className="bg-[#EDF2F7] text-slate-700 px-5 py-2 rounded-xl text-sm font-medium hover:bg-gray-200 transition">
-                      {guest.request}
-                    </button>
-                  </div>
-
-                  <div className="col-span-1 text-slate-700 font-medium">
-                    {guest.room}
-                  </div>
-                  <div className="col-span-1">
-                    <span
-                      className={`inline-flex justify-center min-w-[95px] px-4 mx-6 py-2 rounded-xl text-sm font-semibold ${statusColor(
-                        guest.status,
-                      )}`}
-                    >
-                      {guest.status}
-                    </span>
-                  </div>
-                  <div className="col-span-1 flex justify-end relative group">
-                    <button className="p-2 rounded-lg hover:bg-gray-100">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-gray-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 6h.01M12 12h.01M12 18h.01"
-                        />
-                      </svg>
-                    </button>
-                    <div className="absolute right-0 top-10 w-36 bg-white rounded-xl shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                      <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl">
-                        Edit
-                      </button>
-                      <button className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl">
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-              <div className="flex items-center justify-around py-4 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  Showing <span className="font-medium">1</span> to{" "}
-                  <span className="font-medium">8</span> of{" "}
-                  <span className="font-medium">8</span> entries
-                </p>
-                <div className="flex items-center gap-3">
-                  <button className="w-12 h-12 flex items-center justify-center rounded-xl border border-green-700 text-green-700 hover:bg-green-50 transition">
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button className="w-12 h-12 flex items-center justify-center rounded-xl bg-green-800 text-white font-semibold">
-                    1
-                  </button>
-                  <button className="w-12 h-12 flex items-center justify-center rounded-xl border border-green-700 text-green-700 hover:bg-green-50 transition">
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
-              </div>
+          <div className="grid grid-cols-6 items-center px-6 py-4 border-b border-gray-300 text-sm bg-white">
+            <div className="font-medium text-gray-800">Prakash S</div>
+            <div className="text-gray-600 truncate">
+              prakashfrontend2503@gmail.com
             </div>
-          </motion.div>
+            <div className="text-gray-600">7339628276</div>
+            <div className="text-gray-500">18/02/2026</div>
+            <div className="text-gray-500">Hello</div>
+            <div className="text-right">
+              <button className="text-blue-600 hover:underline">View</button>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

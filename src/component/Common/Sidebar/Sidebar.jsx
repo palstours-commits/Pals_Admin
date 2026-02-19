@@ -10,7 +10,7 @@ import {
   FiMenu,
 } from "react-icons/fi";
 
-import { MdDateRange } from "react-icons/md"; 
+import { MdDateRange } from "react-icons/md";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -55,7 +55,7 @@ const Sidebar = ({ collapsed }) => {
         />
       </div>
 
-      <ul className="space-y-4 text-sm md:text-[14px] font-semibold text-gray-500">
+      <ul className="space-y-4 text-sm md:text-[15px] font-extrabold text-gray-500">
         <SidebarItem
           to="/"
           icon={FiHome}
@@ -96,57 +96,60 @@ const Sidebar = ({ collapsed }) => {
           )}
           {!collapsed && openMenu && (
             <ul className="pl-10 mt-3 space-y-2 text-[14px] text-gray-400">
-  
-  <li
-  className="
+              <li
+                className="
     relative pl-6 cursor-pointer
     transition-all duration-300
     before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-    before:h-[2px] before:w-2 before:bg-gray-400
+    before:h-[3px] before:w-2 before:bg-gray-400
     before:transition-all before:duration-300
     hover:text-red-500
     hover:pl-8
     hover:before:w-5 hover:before:bg-red-500
   "
->
-    <Link to="/menus">Menus</Link>
-  </li>
+              >
+                <Link to="/menus">Menus</Link>
+              </li>
 
-    <li className="relative pl-6 cursor-pointer
+              <li
+                className="relative pl-6 cursor-pointer
       transition-all duration-300
       before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-      before:h-[2px] before:w-2 before:bg-gray-400
+      before:h-[3px] before:w-2 before:bg-gray-400
       before:transition-all before:duration-300
       hover:text-red-500
       hover:pl-8
-      hover:before:w-5 hover:before:bg-red-500">
-    <Link to="/icon">Icon</Link>
-  </li>
+      hover:before:w-5 hover:before:bg-red-500"
+              >
+                <Link to="/icon">Icon</Link>
+              </li>
 
-  <li className="relative pl-6 cursor-pointer
+              <li
+                className="relative pl-6 cursor-pointer
       transition-all duration-300
       before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-      before:h-[2px] before:w-2 before:bg-gray-400
+      before:h-[3px] before:w-2 before:bg-gray-400
       before:transition-all before:duration-300
       hover:text-red-500
       hover:pl-8
-      hover:before:w-5 hover:before:bg-red-500">
-    <Link to="/submenu">Submenu</Link>
-  </li>
+      hover:before:w-5 hover:before:bg-red-500"
+              >
+                <Link to="/submenu">Submenu</Link>
+              </li>
 
-  <li className="relative pl-6 cursor-pointer
+              <li
+                className="relative pl-6 cursor-pointer
       transition-all duration-300
       before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-      before:h-[2px] before:w-2 before:bg-gray-400
+      before:h-[3px] before:w-2 before:bg-gray-400
       before:transition-all before:duration-300
       hover:text-red-500
       hover:pl-8
-      hover:before:w-5 hover:before:bg-red-500">
-    <Link to="/zone">Zone</Link>
-  </li>
-
-</ul>
-
+      hover:before:w-5 hover:before:bg-red-500"
+              >
+                <Link to="/zone">Zone</Link>
+              </li>
+            </ul>
           )}
         </li>
         <SidebarItem
@@ -188,33 +191,33 @@ const Sidebar = ({ collapsed }) => {
           {!collapsed && openService && (
             <ul className="pl-10 mt-3 space-y-3 text-gray-400">
               <li
-              className="
+                className="
                 relative pl-6 cursor-pointer
                 transition-all duration-300
                 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-                before:h-[2px] before:w-2 before:bg-gray-400
+                before:h-[3px] before:w-2 before:bg-gray-400
                 before:transition-all before:duration-300
                 hover:text-red-500
                 hover:pl-8
                 hover:before:w-5 hover:before:bg-red-500
               "
-            >
+              >
                 <Link to="/service/hotel" className="hover:text-red-500">
                   Hotel
                 </Link>
               </li>
               <li
-  className="
+                className="
     relative pl-6 cursor-pointer
     transition-all duration-300
     before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
-    before:h-[2px] before:w-2 before:bg-gray-400
+    before:h-[3px] before:w-2 before:bg-gray-400
     before:transition-all before:duration-300
     hover:text-red-500
     hover:pl-8
     hover:before:w-5 hover:before:bg-red-500
   "
->
+              >
                 <Link to="/service/flight" className="hover:text-red-500">
                   Flight
                 </Link>
@@ -223,7 +226,7 @@ const Sidebar = ({ collapsed }) => {
           )}
         </li>
 
-         <SidebarItem
+        <SidebarItem
           to="/booking"
           icon={MdDateRange}
           label="Booking"
