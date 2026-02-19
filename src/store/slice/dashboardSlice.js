@@ -49,12 +49,12 @@ export const getDashboardBookings = createAsyncThunk(
 
 export const getDashboardRecent = createAsyncThunk(
   "dashboard/getDashboardRecent",
-  async (_, thunkAPI) => {
+  async (type, thunkAPI) => {
     const token = thunkAPI.getState()?.auth?.accessToken;
 
     try {
       const response = await FetchApi({
-        endpoint: "/admin/dashboard/recent",
+        endpoint: `/admin/dashboard/recent?type=${type}`,
         method: "GET",
         token,
       });
@@ -77,6 +77,7 @@ const dashboardSlice = createSlice({
     loading: false,
     bookingsLoading: false,
     recentLoading: false,
+
     error: null,
   },
   reducers: {
@@ -105,11 +106,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(getDashboardBookings.fulfilled, (state, action) => {
         state.bookingsLoading = false;
-        state.bookings =
-          action.payload?.bookings ||
-          action.payload?.data ||
-          action.payload ||
-          [];
+        state.bookings = action.payload?.bookings || [];
       })
       .addCase(getDashboardBookings.rejected, (state, action) => {
         state.bookingsLoading = false;
@@ -122,11 +119,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(getDashboardRecent.fulfilled, (state, action) => {
         state.recentLoading = false;
-        state.recent =
-          action.payload?.recent ||
-          action.payload?.data ||
-          action.payload ||
-          [];
+        state.recent = action.payload?.records || [];
       })
       .addCase(getDashboardRecent.rejected, (state, action) => {
         state.recentLoading = false;

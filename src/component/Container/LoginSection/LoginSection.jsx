@@ -62,7 +62,11 @@ const LoginSection = () => {
         <div className="grid grid-cols-12 w-full h-full">
           <div className="col-span-4 bg-white flex flex-col justify-between items-center px-12 py-16">
             <div className="text-center mt-12">
-              <img src={logoImg} alt="logo" className="mx-auto w-32" />
+              <img
+                src="./navbar_logo.svg"
+                alt="logo"
+                className="mx-auto w-32"
+              />
               <h3 className="mt-6 text-2xl font-semibold text-gray-800">
                 Welcome back!
               </h3>

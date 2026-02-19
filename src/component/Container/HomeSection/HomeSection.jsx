@@ -9,7 +9,10 @@ import { BookingList } from "../../../common/BookingList";
 import {
   getDashboardBookings,
   getDashboardCounts,
+  getDashboardRecent,
 } from "../../../store/slice/dashboardSlice";
+import { statusColor } from "../../../utils/customColorCreate";
+import { Link } from "react-router-dom";
 
 const statsConfig = [
   {
@@ -49,33 +52,27 @@ const statsConfig = [
   },
 ];
 
-const statsData = {
-  Daily: [
-    { title: "Contact", value: 128, change: "+2.5%" },
-    { title: "Flight", value: 64, change: "+1.2%" },
-    { title: "Hotel", value: 92, change: "+3.1%" },
-  ],
-  Weekly: [
-    { title: "Contact", value: 842, change: "+4.8%" },
-    { title: "Flight", value: 410, change: "+2.6%" },
-    { title: "Hotel", value: 675, change: "+5.4%" },
-  ],
-  Monthly: [
-    { title: "Contact", value: 3451, change: "+6.2%" },
-    { title: "Flight", value: 2041, change: "+3.9%" },
-    { title: "Hotel", value: 2890, change: "+7.1%" },
-  ],
-};
+const tabs = [
+  { key: "enquiry", label: "Enquiries" },
+  { key: "booking", label: "Bookings" },
+  { key: "contactus", label: "Contact Us" },
+];
 
 const HomeSection = () => {
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState("Monthly");
-  const { counts, loading } = useSelector((state) => state.dashboard);
+  const [activeTab, setActiveTab] = useState("enquiry");
+  const { counts, loading, bookings, recent } = useSelector(
+    (state) => state.dashboard,
+  );
 
   useEffect(() => {
     dispatch(getDashboardCounts());
     dispatch(getDashboardBookings());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getDashboardRecent(activeTab));
+  }, [dispatch, activeTab]);
 
   const handleCalendarChange = (date) => {
     const formatDate = (date) => {
@@ -108,39 +105,58 @@ const HomeSection = () => {
         <div className=" rounded-2xl bg-white p-6 shadow-md">
           <Calendar onChange={handleCalendarChange} />
           <div className="my-6 h-px bg-gray-100" />
-          <BookingList />
+          <BookingList item={bookings} />
         </div>
         <div className="bg-white rounded-xl shadow p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold">Reservation Stats</h2>
             <div className="flex gap-6 text-sm font-medium">
-              {["Daily", "Weekly", "Monthly"].map((tab) => (
+              {tabs.map(({ key, label }) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  key={key}
+                  onClick={() => setActiveTab(key)}
                   className={`pb-1 border-b-2 transition ${
-                    activeTab === tab
+                    activeTab === key
                       ? "border-green-600 text-green-600"
                       : "border-transparent text-gray-500"
                   }`}
                 >
-                  {tab}
+                  {label}
                 </button>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-6 items-center px-6 py-4 border-b border-gray-300 text-sm bg-white">
-            <div className="font-medium text-gray-800">Prakash S</div>
-            <div className="text-gray-600 truncate">
-              prakashfrontend2503@gmail.com
+          {recent?.length > 0 ? (
+            recent.map((item) => (
+              <div
+                key={item._id}
+                className="grid grid-cols-6 items-center px-6 py-4 border-b border-gray-300 text-sm bg-white"
+              >
+                <div className="font-medium text-gray-800">{item.name}</div>
+                <div className="text-gray-600 truncate">{item.email}</div>
+                <div className="text-gray-600">{item.phone}</div>
+                <div className="text-gray-500">
+                  {new Date(item.date).toLocaleDateString("en-GB")}
+                </div>
+                <span
+                  className={`rounded-xl px-4 py-1 text-xs font-semibold  ${statusColor(
+                    item.enquiryStatus,
+                  )}`}
+                >
+                  {item.enquiryStatus}
+                </span>
+                <div className="text-right">
+                  <Link to="/booking" className="text-blue-600 hover:underline">
+                    View
+                  </Link >
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-400 py-6">
+              No recent data found
             </div>
-            <div className="text-gray-600">7339628276</div>
-            <div className="text-gray-500">18/02/2026</div>
-            <div className="text-gray-500">Hello</div>
-            <div className="text-right">
-              <button className="text-blue-600 hover:underline">View</button>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

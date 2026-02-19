@@ -1,46 +1,33 @@
-const bookings = [
-  {
-    id: 1,
-    title: "Queen Bed A-12324",
-    user: "James Sukardi",
-    time: "12min ago",
-    badge: "3",
-    color: "bg-green-900",
-  },
-  {
-    id: 2,
-    title: "Deluxe Room B-1324",
-    user: "Angela Moss",
-    time: "12min ago",
-    badge: "16, 17, 18",
-    color: "bg-red-500",
-  },
-  {
-    id: 3,
-    title: "King Big C-2445",
-    user: "JGeovanny",
-    time: "12min ago",
-    badge: "3",
-    color: "bg-orange-400",
-  },
-];
+import { statusColor } from "../utils/customColorCreate";
 
-export function BookingList() {
-  return (
+export function BookingList({ item = [] }) { 
+ return (
     <div className="mt-6 space-y-6">
-      {bookings?.map((b) => (
-        <div key={b.id} className="flex items-center justify-between">
+      {item?.slice(0, 5)?.map((b) => (
+        <div
+          key={b._id}
+          className="flex items-center justify-between rounded-lg border border-gray-300 p-4"
+        >
           <div>
-            <h3 className="font-semibold text-gray-900">{b.title}</h3>
+            <h3 className="font-semibold text-gray-900">
+              {b.name} ({b.numberOfPersons} Persons)
+            </h3>
+
             <p className="text-sm text-gray-500">
-              {b.user} · {b.time}
+              {b.email} · {b.phone}
+            </p>
+
+            <p className="text-xs text-gray-400">
+              {new Date(b.date).toLocaleDateString()} · Updated{" "}
+              {new Date(b.updatedAt).toLocaleTimeString()}
             </p>
           </div>
-
           <span
-            className={`rounded-xl px-4 py-2 text-sm font-semibold text-white ${b.color}`}
+            className={`rounded-xl px-4 py-1 text-xs font-semibold  ${statusColor(
+              b.enquiryStatus,
+            )}`}
           >
-            {b.badge}
+            {b.enquiryStatus}
           </span>
         </div>
       ))}
