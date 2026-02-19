@@ -1,9 +1,6 @@
 import {
   FiMenu,
-  FiSearch,
   FiBell,
-  FiMail,
-  FiMessageSquare,
   FiUser,
   FiMail as FiInbox,
   FiLogOut,
@@ -12,11 +9,19 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../store/slice/authSlice";
 import { notifyAlert } from "../../../utils/notificationService";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ toggleSidebar, toggleMobile }) => {
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+
+  const title = pathname
+    .split("/")
+    .filter(Boolean)
+    .pop()
+    ?.replace(/-/g, " ")
+    ?.replace(/\b\w/g, (c) => c.toUpperCase());
 
   const handleLogout = () => {
     dispatch(logout());
@@ -40,7 +45,7 @@ const Header = ({ toggleSidebar, toggleMobile }) => {
           className="cursor-pointer hidden md:block"
           onClick={toggleSidebar}
         />
-        <h1 className="text-lg md:text-2xl font-semibold">Dashboard</h1>
+        <h1 className="text-lg md:text-2xl font-semibold">{title}</h1>
       </div>
       <div className="hidden md:flex items-center gap-8">
         <div className="relative">

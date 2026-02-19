@@ -20,15 +20,21 @@ const SubMenuSection = () => {
   const { submenus, actionLoading, deletedError, deletedMessage } = useSelector(
     (state) => state.submenu,
   );
+  const [searchTerm, setSearchTerm] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const totalPages = Math.ceil(submenus.length / itemsPerPage);
+
+  const filteredMenus = submenus?.filter((menu) =>
+    menu?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredMenus.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentServices = submenus?.slice(
+  const currentServices = filteredMenus?.slice(
     startIndex,
     startIndex + itemsPerPage,
   );
@@ -79,12 +85,24 @@ const SubMenuSection = () => {
               SubMenu List ({submenus?.length}){" "}
             </h2>
 
-            <button
-              onClick={() => setOpenModal(true)}
-              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
-            >
-              + Create SubMenu
-            </button>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Search by name or status..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+              />
+              <button
+                onClick={() => setOpenModal(true)}
+                className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+              >
+                + Create SubMenu
+              </button>
+            </div>
           </div>
 
           <motion.div

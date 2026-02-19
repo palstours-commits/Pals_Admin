@@ -25,6 +25,19 @@ const ContactSection = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectData, setSelectData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredContacts = contacts?.filter((item) => {
+    if (!searchTerm.trim()) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      item.name?.toLowerCase().includes(search) ||
+      item.email?.toLowerCase().includes(search) ||
+      item.mobile?.toString().includes(search) ||
+      item.country?.toLowerCase().includes(search) ||
+      item.message?.toLowerCase().includes(search)
+    );
+  });
 
   useEffect(() => {
     dispatch(getContacts());
@@ -74,15 +87,26 @@ const ContactSection = () => {
                 Contact Messages ({contacts?.length || 0})
               </h2>
 
-              <button
-                onClick={() => {
-                  setSelectData(null);
-                  setOpenModal(true);
-                }}
-                className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
-              >
-                + Create Contact
-              </button>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Search by name or status..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                  className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+                />
+                <button
+                  onClick={() => {
+                    setSelectData(null);
+                    setOpenModal(true);
+                  }}
+                  className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+                >
+                  + Create Contact
+                </button>
+              </div>
             </div>
 
             <div className="bg-white rounded shadow overflow-x-auto">
@@ -96,8 +120,8 @@ const ContactSection = () => {
                 <div className="text-right">Action</div>
               </div>
 
-              {contacts?.length > 0 ? (
-                contacts?.map((item) => (
+              {filteredContacts?.length > 0 ? (
+                filteredContacts?.map((item) => (
                   <div
                     key={item._id}
                     className="grid grid-cols-7 px-8 py-5 text-sm items-center "

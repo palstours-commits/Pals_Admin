@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { BiChevronDown } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import { statusColor } from "../../../utils/customColorCreate";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,15 +27,26 @@ const EnquirySection = () => {
     dispatch(getEnquiries());
   }, [dispatch]);
 
-  const [open, setOpen] = useState(false);
-  const [sort, setSort] = useState("Newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredEnquiries = enquiries.filter((guest) => {
+    if (!searchTerm.trim()) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      guest?.name?.toLowerCase().includes(search) ||
+      guest?.email?.toLowerCase().includes(search) ||
+      guest?.phone?.toString().includes(search) ||
+      guest?.enquiryStatus?.toLowerCase().includes(search) ||
+      guest?.packageId?.packageName?.toLowerCase().includes(search)
+    );
+  });
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedEnquiries = enquiries.slice(
+  const paginatedEnquiries = filteredEnquiries.slice(
     startIndex,
     startIndex + ITEMS_PER_PAGE,
   );
@@ -107,49 +117,26 @@ const EnquirySection = () => {
                   ))}
                 </div>
               </div>
-
-              <div className="flex items-center gap-4">
-                <button
-                  type="submit"
-                  onClick={() => setOpenModal(true)}
-                  className="px-6 py-3 bg-[#14532D]  text-white rounded-xl hover:bg-green-800 cursor-pointer"
-                >
-                  Create Enquiry
-                </button>
-                <div className="bg-[#14532D] text-white px-6 py-3 rounded-xl font-medium hover:bg-green-800">
-                  02/13/2026
-                </div>
-                <div className="relative inline-block">
-                  <div
-                    onClick={() => setOpen(!open)}
-                    className="bg-white border border-gray-200 px-7  py-3 rounded-lg flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer"
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Search by name or status..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+                />
+                <div className="flex items-center gap-4">
+                  <button
+                    type="submit"
+                    onClick={() => setOpenModal(true)}
+                    className="px-6 py-3 bg-[#14532D]  text-white rounded-xl hover:bg-green-800 cursor-pointer"
                   >
-                    {sort}
-                    <BiChevronDown size={18} className="text-gray-400" />
-                  </div>
-                  {open && (
-                    <div className="absolute top-full mt-2 w-32 bg-gray-100 rounded-lg shadow-md py-2 z-50">
-                      <div
-                        onClick={() => {
-                          setSort("Oldest");
-                          setOpen(false);
-                        }}
-                        className="px-4 py-2 text-gray-600 hover:bg-gray-200 cursor-pointer"
-                      >
-                        Oldest
-                      </div>
-
-                      <div
-                        onClick={() => {
-                          setSort("Newest");
-                          setOpen(false);
-                        }}
-                        className="px-4 py-2 text-gray-600 hover:bg-gray-200 cursor-pointer"
-                      >
-                        Newest
-                      </div>
-                    </div>
-                  )}
+                    Create Enquiry
+                  </button>
+                  <div className="relative inline-block"></div>
                 </div>
               </div>
             </div>
@@ -256,7 +243,7 @@ const EnquirySection = () => {
                   ))}
                   <Pagination
                     currentPage={currentPage}
-                    totalItems={enquiries.length}
+                    totalItems={filteredEnquiries.length}
                     itemsPerPage={ITEMS_PER_PAGE}
                     onPageChange={setCurrentPage}
                   />

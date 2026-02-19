@@ -28,9 +28,18 @@ const MenuSection = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const totalPages = Math.ceil(menus.length / itemsPerPage);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredMenus = menus?.filter((menu) =>
+    menu?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.ceil(filteredMenus.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentServices = menus?.slice(startIndex, startIndex + itemsPerPage);
+  const currentServices = filteredMenus.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   useEffect(() => {
     dispatch(getMenus());
@@ -76,12 +85,27 @@ const MenuSection = () => {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Menu List ({menus?.length})</h2>
 
-            <button
-              onClick={() => setOpenModal(true)}
-              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
-            >
-              + Create Menu
-            </button>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Search by name or status..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+              />
+              <button
+                onClick={() => {
+                  setOpenModal(true);
+                  setSelectedService(null);
+                }}
+                className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+              >
+                + Create Menu
+              </button>
+            </div>
           </div>
 
           <motion.div

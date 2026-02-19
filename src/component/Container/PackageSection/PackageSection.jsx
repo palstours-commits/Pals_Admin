@@ -8,7 +8,6 @@ import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
 import { notifyAlert } from "../../../utils/notificationService";
 import { formatIndianDateTime } from "../../../utils/formatDateTime";
 
-
 import {
   getPackages,
   deletePackage,
@@ -28,6 +27,20 @@ const PackageSection = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPackages = packages?.filter((pkg) => {
+    if (!searchTerm.trim()) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      pkg?.packageName?.toLowerCase().includes(search) ||
+      pkg?.zoneId?.name?.toLowerCase().includes(search) ||
+      pkg?.zoneId?.subMenuId?.name?.toLowerCase().includes(search) ||
+      pkg?.destinations?.some((d) => d.toLowerCase().includes(search)) ||
+      (search === "active" && pkg?.status === 1) ||
+      (search === "inactive" && pkg?.status === 0)
+    );
+  });
 
   useEffect(() => {
     dispatch(getPackages());
@@ -68,16 +81,27 @@ const PackageSection = () => {
               Package List ({packages?.length || 0})
             </h2>
 
-            <button
-              onClick={() => setOpenModal(true)}
-              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
-            >
-              + Create Package
-            </button>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Search by name or status..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                }}
+                className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+              />
+              <button
+                onClick={() => setOpenModal(true)}
+                className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+              >
+                + Create Package
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-            {packages?.map((pkg) => (
+            {filteredPackages?.map((pkg) => (
               <div
                 key={pkg._id}
                 className="bg-white rounded-xl shadow-lg overflow-hidden "

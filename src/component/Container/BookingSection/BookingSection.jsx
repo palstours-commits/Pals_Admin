@@ -15,7 +15,6 @@ import {
 } from "../../../store/slice/bookingSlice";
 
 import CreateBooking from "./createBooking";
-
 const BookingSection = () => {
   const dispatch = useDispatch();
 
@@ -27,6 +26,19 @@ const BookingSection = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectData, setSelectData] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredBookings = bookings?.filter((item) => {
+    if (!searchTerm.trim()) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      `${item.firstName} ${item.lastName}`.toLowerCase().includes(search) ||
+      item.email?.toLowerCase().includes(search) ||
+      item.mobile?.toString().includes(search) ||
+      item.country?.toLowerCase().includes(search) ||
+      item.bookingStatus?.toLowerCase().includes(search)
+    );
+  });
 
   useEffect(() => {
     dispatch(getBookings());
@@ -81,15 +93,26 @@ const BookingSection = () => {
                 Bookings ({bookings?.length || 0})
               </h2>
 
-              <button
-                onClick={() => {
-                  setSelectData(null);
-                  setOpenModal(true);
-                }}
-                className="bg-green-800 text-white px-6 py-2 rounded-md"
-              >
-                + Create Booking
-              </button>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Search by name or status..."
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                  className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+                />
+                <button
+                  onClick={() => {
+                    setSelectData(null);
+                    setOpenModal(true);
+                  }}
+                  className="bg-green-800 text-white px-6 py-2 rounded-md"
+                >
+                  + Create Booking
+                </button>
+              </div>
             </div>
             <div className="bg-white rounded shadow overflow-x-auto">
               <table className="min-w-full text-sm text-left">
@@ -109,8 +132,8 @@ const BookingSection = () => {
                 </thead>
 
                 <tbody>
-                  {bookings?.length > 0 ? (
-                    bookings.map((item) => (
+                  {filteredBookings?.length > 0 ? (
+                    filteredBookings.map((item) => (
                       <tr
                         key={item._id}
                         className="border-b border-gray-300 hover:bg-gray-50"

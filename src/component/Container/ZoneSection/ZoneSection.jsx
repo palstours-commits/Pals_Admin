@@ -26,6 +26,11 @@ const Zonesection = () => {
   const [selectedZone, setSelectedZone] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredZone = zones?.filter((menu) =>
+    menu?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   useEffect(() => {
     dispatch(getZones());
@@ -77,16 +82,26 @@ const Zonesection = () => {
       <div className="min-h-screen">
         <div className="flex justify-between items-center mb-6 px-8">
           <h2 className="text-xl font-bold">Zone List ({zones?.length})</h2>
-
-          <button
-            onClick={() => setOpenModal(true)}
-            className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
-          >
-            + Create Zone
-          </button>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="Search by name or status..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+            />
+            <button
+              onClick={() => setOpenModal(true)}
+              className="bg-green-800 text-white px-6 py-2 rounded-md cursor-pointer"
+            >
+              + Create Zone
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-          {zones?.map((zone) => (
+          {filteredZone?.map((zone) => (
             <div
               key={zone._id}
               className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
