@@ -1,4 +1,4 @@
-import { logout } from "../store/slice/authSlice";
+import { refreshToken } from "../store/slice/authSlice";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const FETCH_TIMEOUT = 15000;
@@ -27,14 +27,9 @@ export const FetchApi = async ({
 
     clearTimeout(timeoutId);
     if (response.status === 401) {
-      store.dispatch(logout());
-
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 0);
-
-      throw new Error("Session expired");
+      await store.dispatch(refreshToken());
     }
+
     const contentType = response.headers.get("content-type");
     const rawText = await response.text();
 

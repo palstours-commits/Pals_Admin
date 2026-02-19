@@ -1,6 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setupTokenRefresh } from "./utils/setupTokenRefresh";
+import { useSelector } from "react-redux";
+import {
+  clearTokenRefresh,
+  setupTokenRefresh,
+} from "./utils/setupTokenRefresh";
 import { useEffect } from "react";
 import HomePage from "./pages/Home/HomePage";
 import NotFound from "./pages/NotFound/NotFound";
@@ -16,16 +19,21 @@ import ViewPackage from "./pages/ViewPackage/ViewPackage";
 import Enquiry from "./pages/Enquiry/Enquiry";
 import IconPage from "./pages/Icon/Icon";
 import Booking from "./pages/Booking/Booking";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
-  const dispatch = useDispatch();
   const { accessToken } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (accessToken) {
       setupTokenRefresh();
+    } else {
+      clearTokenRefresh();
     }
-  }, [accessToken, dispatch]);
+    return () => {
+      clearTokenRefresh();
+    };
+  }, [accessToken]);
 
   return (
     <Routes>
@@ -39,7 +47,8 @@ function App() {
         <Route path="/service/flight" element={<Flight />} />
         <Route path="/packages" element={<Package />} />
         <Route path="/enquiry" element={<Enquiry />} />
-        <Route path="icon" element={<IconPage />} />
+        <Route path="/icon" element={<IconPage />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/booking" element={<Booking />} />
