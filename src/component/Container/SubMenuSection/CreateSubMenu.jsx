@@ -117,6 +117,9 @@ const CreateSubMenu = ({ service, onClose }) => {
           </button>
         </div>
         <div className="px-6 py-6 space-y-6">
+          <label className="block text-sm font-medium mb-2">
+            Banner Image<span>*</span>
+          </label>
           <div className="flex justify-center">
             <ImageUpload
               size="1920x300"

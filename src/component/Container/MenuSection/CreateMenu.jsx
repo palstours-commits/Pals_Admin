@@ -108,8 +108,15 @@ const ServiceStatusModal = ({ service, onClose }) => {
           </button>
         </div>
         <div className="px-6 py-6 space-y-6">
+          <label className="block text-sm font-medium mb-2">
+            Icon <span className="text-red-500">*</span>
+          </label>
           <div className="flex justify-center">
-            <ImageUpload image={form.image} onImageChange={handleImageChange} />
+            <ImageUpload
+              image={form.image}
+              onImageChange={handleImageChange}
+              size={"60 x 60"}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">

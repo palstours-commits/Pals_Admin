@@ -27,6 +27,7 @@ const CreatePackage = ({ packageData, onClose }) => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [selectedSubMenuId, setSelectedSubMenuId] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   const [formData, setFormData] = useState({
     zoneId: "",
@@ -107,9 +108,12 @@ const CreatePackage = ({ packageData, onClose }) => {
 
   const handleImages = (files) => {
     const fileArray = Array.from(files);
-    setFormData({ ...formData, images: fileArray });
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...fileArray],
+    }));
     const previews = fileArray.map((file) => URL.createObjectURL(file));
-    setImagePreviews(previews);
+    setImagePreviews((prev) => [...prev, ...previews]);
   };
 
   const removeImage = (index) => {
@@ -130,6 +134,19 @@ const CreatePackage = ({ packageData, onClose }) => {
       }),
     );
     setExistingImages((prev) => prev.filter((img) => img !== image));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleImages(files);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -181,133 +198,128 @@ const CreatePackage = ({ packageData, onClose }) => {
         </h1>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6 sticky top-24 self-start">
-              <div className="space-y-6">
+            <div className="space-y-6">
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Holiday Type *
+                </label>
+
+                <SingleSelectDropdown
+                  options={subMenus}
+                  value={selectedSubMenuId}
+                  onChange={(value) => {
+                    setSelectedSubMenuId(value);
+                    setFormData({ ...formData, zoneId: "" });
+                  }}
+                  placeholder="Select Holiday Type"
+                  labelKey="name"
+                  valueKey="_id"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">Zone *</label>
+                <SingleSelectDropdown
+                  options={filteredZones}
+                  value={formData.zoneId}
+                  onChange={(value) =>
+                    setFormData({ ...formData, zoneId: value })
+                  }
+                  placeholder={
+                    selectedSubMenuId
+                      ? "Select Zone"
+                      : "Select Holiday Type First"
+                  }
+                  disabled={!selectedSubMenuId}
+                  labelKey="name"
+                  valueKey="_id"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  packageName *
+                </label>
+                <input
+                  name="packageName"
+                  value={formData.packageName}
+                  onChange={handleChange}
+                  className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">
+                  Destinations *
+                </label>
+                <input
+                  name="destinations"
+                  value={formData.destinations}
+                  onChange={handleChange}
+                  className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium mb-1 block">
-                    Holiday Type *
-                  </label>
-
-                  <SingleSelectDropdown
-                    options={subMenus}
-                    value={selectedSubMenuId}
-                    onChange={(value) => {
-                      setSelectedSubMenuId(value);
-                      setFormData({ ...formData, zoneId: "" });
-                    }}
-                    placeholder="Select Holiday Type"
-                    labelKey="name"
-                    valueKey="_id"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-1 block">
-                    Zone *
-                  </label>
-
-                  <SingleSelectDropdown
-                    options={filteredZones}
-                    value={formData.zoneId}
-                    onChange={(value) =>
-                      setFormData({ ...formData, zoneId: value })
-                    }
-                    placeholder={
-                      selectedSubMenuId
-                        ? "Select Zone"
-                        : "Select Holiday Type First"
-                    }
-                    disabled={!selectedSubMenuId}
-                    labelKey="name"
-                    valueKey="_id"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-1 block">
-                    packageName *
+                    Days *
                   </label>
                   <input
-                    name="packageName"
-                    value={formData.packageName}
+                    type="number"
+                    name="days"
+                    value={formData.days}
                     onChange={handleChange}
                     className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
                     required
                   />
                 </div>
+
                 <div>
                   <label className="text-sm font-medium mb-1 block">
-                    Destinations *
+                    Nights *
                   </label>
                   <input
-                    name="destinations"
-                    value={formData.destinations}
+                    type="number"
+                    name="nights"
+                    value={formData.nights}
                     onChange={handleChange}
                     className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
                     required
                   />
                 </div>
+              </div>
+              <div className="border border-gray-300 rounded-lg p-4 space-y-3 flex justify-between">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="isPopularDestinations"
+                    checked={formData.isPopularDestinations}
+                    onChange={handleChange}
+                  />
+                  Popular Destination
+                </label>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">
-                      Days *
-                    </label>
-                    <input
-                      type="number"
-                      name="days"
-                      value={formData.days}
-                      onChange={handleChange}
-                      className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
-                      required
-                    />
-                  </div>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="newArrivals"
+                    checked={formData.newArrivals}
+                    onChange={handleChange}
+                  />
+                  New Arrival
+                </label>
 
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">
-                      Nights *
-                    </label>
-                    <input
-                      type="number"
-                      name="nights"
-                      value={formData.nights}
-                      onChange={handleChange}
-                      className=" py-2 border-gray-300 rounded-md border w-full outline-0 ps-2"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="border border-gray-300 rounded-lg p-4 space-y-3 flex justify-between">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="isPopularDestinations"
-                      checked={formData.isPopularDestinations}
-                      onChange={handleChange}
-                    />
-                    Popular Destination
-                  </label>
-
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="newArrivals"
-                      checked={formData.newArrivals}
-                      onChange={handleChange}
-                    />
-                    New Arrival
-                  </label>
-
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="isTrending"
-                      checked={formData.isTrending}
-                      onChange={handleChange}
-                    />
-                    Trending
-                  </label>
-                </div>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="isTrending"
+                    checked={formData.isTrending}
+                    onChange={handleChange}
+                  />
+                  Trending
+                </label>
               </div>
             </div>
 
@@ -317,9 +329,15 @@ const CreatePackage = ({ packageData, onClose }) => {
                   Package Images
                 </label>
                 <label
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 
-                    flex flex-col items-center justify-center cursor-pointer
-                    hover:border-green-600 transition"
+                  onDragOver={handleDragOver}
+                  onDragEnter={() => setIsDragging(true)}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
+                  className={`border-2 border-dashed rounded-lg p-15
+    flex flex-col items-center justify-center cursor-pointer
+    transition
+    ${isDragging ? "border-green-600 bg-green-50" : "border-gray-300"}
+  `}
                 >
                   <span className="text-sm text-gray-500">
                     Click or drag images here
@@ -327,6 +345,7 @@ const CreatePackage = ({ packageData, onClose }) => {
                   <span className="text-xs text-gray-400 mt-1">
                     (Multiple images allowed)
                   </span>
+
                   <input
                     type="file"
                     multiple

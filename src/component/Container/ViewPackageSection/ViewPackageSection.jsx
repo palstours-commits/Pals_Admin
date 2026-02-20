@@ -27,7 +27,7 @@ const ViewPackageSection = () => {
   }
 
   return (
-    <div className="px-6 space-y-6">
+    <div className="px-20 space-y-6">
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-lg font-semibold text-gray-600 hover:text-red-500 transition cursor-pointer"
@@ -58,11 +58,15 @@ const ViewPackageSection = () => {
       </div>
       <ul className="list-disc pl-6 space-y-2 text-gray-600">
         {singlePackage.tripHighlights
-          .replace(/<\/?p>/g, "")
-          .split("<br>")
-          .map((item, index) =>
-            item.trim() ? <li key={index}>{item.trim()}</li> : null,
-          )}
+          .match(/<li>(.*?)<\/li>/g)
+          ?.map((li, index) => (
+            <li
+              key={index}
+              dangerouslySetInnerHTML={{
+                __html: li.replace(/<\/?li>/g, ""),
+              }}
+            />
+          ))}
       </ul>
 
       {singlePackage?.importantInfo && (

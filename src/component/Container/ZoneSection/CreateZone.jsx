@@ -115,6 +115,9 @@ const CreateZone = ({ zone, onClose }) => {
           {zone ? "Update Zone" : "Create Zone"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block text-sm font-medium mb-2">
+            Image <span>*</span>
+          </label>
           <div className="flex flex-col items-center">
             <ImageUpload
               image={formData.image}
