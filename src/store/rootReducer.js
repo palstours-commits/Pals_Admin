@@ -10,6 +10,7 @@ import IconReducer from "./slice/iconSlice";
 import bookingReducer from "./slice/bookingSlice";
 import dashboardReducer from "./slice/dashboardSlice";
 import offerReducer from "./slice/offerSlice";
+import adminFlightReducer from "./slice/adminFlightSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -22,5 +23,6 @@ const reducer = combineReducers({
   booking: bookingReducer,
   dashboard: dashboardReducer,
   offer: offerReducer,
+  adminFlight: adminFlightReducer,
 });
 export default reducer;

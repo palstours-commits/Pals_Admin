@@ -22,7 +22,6 @@ const CreateContact = ({ contactData, onClose }) => {
     mobile: "",
     country: "",
     message: "",
-    // contactUsStatus: "PENDING",
   });
 
   useEffect(() => {
@@ -146,20 +145,6 @@ const CreateContact = ({ contactData, onClose }) => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
             />
           </div>
-
-          {/* <div>
-            <label className="text-sm font-medium block mb-1">Status</label>
-            <select
-              name="contactUsStatus"
-              value={formData.contactUsStatus}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
-            >
-              <option value="PENDING">Pending</option>
-              <option value="RESOLVED">Resolved</option>
-            </select>
-          </div> */}
-
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
