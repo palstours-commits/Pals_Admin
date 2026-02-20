@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 
 import { MdDateRange } from "react-icons/md";
+import { RiCoupon3Line } from "react-icons/ri";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -225,6 +226,12 @@ const Sidebar = ({ collapsed }) => {
           to="/booking"
           icon={MdDateRange}
           label="Booking"
+          collapsed={collapsed}
+        />
+        <SidebarItem
+          to="/offers"
+          icon={RiCoupon3Line}
+          label="Offers"
           collapsed={collapsed}
         />
 

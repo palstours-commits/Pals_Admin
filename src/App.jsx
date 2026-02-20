@@ -20,6 +20,7 @@ import Enquiry from "./pages/Enquiry/Enquiry";
 import IconPage from "./pages/Icon/Icon";
 import Booking from "./pages/Booking/Booking";
 import Profile from "./pages/Profile/Profile";
+import Offers from "./pages/Offers/Offers";
 
 function App() {
   const { accessToken } = useSelector((state) => state.auth);
@@ -49,6 +50,7 @@ function App() {
         <Route path="/enquiry" element={<Enquiry />} />
         <Route path="/icon" element={<IconPage />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/offers" element={<Offers />} />
         <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/booking" element={<Booking />} />

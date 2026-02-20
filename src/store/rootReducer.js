@@ -9,6 +9,7 @@ import contactusReducer from "./slice/contactusSlice";
 import IconReducer from "./slice/iconSlice";
 import bookingReducer from "./slice/bookingSlice";
 import dashboardReducer from "./slice/dashboardSlice";
+import offerReducer from "./slice/offerSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -20,5 +21,6 @@ const reducer = combineReducers({
   icon: IconReducer,
   booking: bookingReducer,
   dashboard: dashboardReducer,
+  offer: offerReducer,
 });
 export default reducer;
