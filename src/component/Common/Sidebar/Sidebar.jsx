@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 
 import { MdDateRange } from "react-icons/md";
-import { RiCoupon3Line } from "react-icons/ri";
+import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -48,7 +48,7 @@ const Sidebar = ({ collapsed }) => {
   const [openService, setOpenService] = useState(false);
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen h-screen p-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
       <div className="mb-10 flex justify-center">
         <img
           src="./navbar_logo.svg"
@@ -232,6 +232,12 @@ const Sidebar = ({ collapsed }) => {
           to="/offers"
           icon={RiCoupon3Line}
           label="Offers"
+          collapsed={collapsed}
+        />
+        <SidebarItem
+          to="/blog"
+          icon={RiArticleLine}
+          label="Blog"
           collapsed={collapsed}
         />
 
