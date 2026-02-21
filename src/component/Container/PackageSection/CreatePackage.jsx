@@ -16,6 +16,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Image from "../../../common/Image";
 import ItineraryEditor from "../../../common/ItineraryEditor";
+import ImportantInfoEditor from "../../../common/ImportantInfoEditor";
 
 const CreatePackage = ({ packageData, onClose }) => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const CreatePackage = ({ packageData, onClose }) => {
     overview: "",
     tripHighlights: "",
     itinerary: [],
-    importantInfo: "",
+    importantInfo: [],
     isPopularDestinations: false,
     newArrivals: false,
     isTrending: false,
@@ -60,10 +61,12 @@ const CreatePackage = ({ packageData, onClose }) => {
         nights: packageData?.nights || "",
         images: [],
         slug: packageData?.slug || "",
-        overview: packageData?.overview?.Description || "",
+        overview: packageData?.overview?.Description || [],
         tripHighlights: packageData?.tripHighlights || "",
         itinerary: packageData?.itinerary || [],
-        importantInfo: packageData?.importantInfo || "",
+        importantInfo: Array.isArray(packageData?.importantInfo)
+          ? packageData.importantInfo
+          : [],
         isPopularDestinations: packageData?.isPopularDestinations || false,
         newArrivals: packageData?.newArrivals || false,
         isTrending: packageData?.isTrending || false,
@@ -152,11 +155,14 @@ const CreatePackage = ({ packageData, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = new FormData();
+
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "images") {
         value.forEach((img) => payload.append("images", img));
       } else if (key === "itinerary") {
         payload.append("itinerary", JSON.stringify(value));
+      } else if (key === "importantInfo") {
+        payload.append("importantInfo", JSON.stringify(value));
       } else {
         payload.append(key, value);
       }
@@ -469,33 +475,11 @@ const CreatePackage = ({ packageData, onClose }) => {
                 <label className="text-sm font-medium mb-1 block">
                   Important Information
                 </label>
-                <CKEditor
-                  key={packageData?._id || "new"}
-                  editor={ClassicEditor}
-                  data={formData.importantInfo}
-                  config={{
-                    licenseKey: "GPL",
-                    toolbar: [
-                      "heading",
-                      "|",
-                      "bold",
-                      "italic",
-                      "underline",
-                      "|",
-                      "bulletedList",
-                      "numberedList",
-                      "|",
-                      "link",
-                      "|",
-                      "undo",
-                      "redo",
-                    ],
-                  }}
-                  onChange={(e, editor) =>
-                    setFormData({
-                      ...formData,
-                      importantInfo: editor.getData(),
-                    })
+
+                <ImportantInfoEditor
+                  value={formData.importantInfo}
+                  onChange={(value) =>
+                    setFormData({ ...formData, importantInfo: value })
                   }
                 />
               </div>
