@@ -79,7 +79,7 @@ const SubMenuSection = () => {
   return (
     <>
       <div className="min-h-screen px-6 py-10">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">
               SubMenu List ({submenus?.length}){" "}
@@ -119,52 +119,62 @@ const SubMenuSection = () => {
                 <div className="text-right">Action</div>
               </div>
 
-              {currentServices?.map((menu, index) => (
-                <motion.div
-                  key={menu?._id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="grid grid-cols-5 px-8 py-5 items-center text-sm"
-                >
-                  <div className="font-medium">{menu?.name}</div>
-                  <div>{formatIndianDateTime(menu?.createdAt)}</div>
-                  <div>
-                    <Image
-                      src={menu?.bannerImage}
-                      alt={menu?.name}
-                      className="w-15 h-15"
-                    />
-                  </div>
-                  <div>
-                    <span
-                      className={`px-4 py-2 rounded-xl text-sm font-semibold ${
-                        menu?.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-600"
-                      }`}
-                    >
-                      {menu?.status}
-                    </span>
-                  </div>
-                  <div className="flex justify-end">
-                    <DotMenu
-                      onEdit={() => {
-                        setOpenModal(true);
-                        setSelectedService(menu);
-                      }}
-                      onDelete={() => handleDeleteClick(menu._id)}
-                    />
-                  </div>
-                </motion.div>
-              ))}
+              {currentServices?.length > 0 ? (
+                currentServices.map((menu, index) => (
+                  <motion.div
+                    key={menu?._id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="grid grid-cols-5 px-8 py-5 items-center text-sm"
+                  >
+                    <div className="font-medium">{menu?.name}</div>
+                    <div>{formatIndianDateTime(menu?.createdAt)}</div>
+                    <div>
+                      <Image
+                        src={menu?.bannerImage}
+                        alt={menu?.name}
+                        className="w-15 h-15"
+                      />
+                    </div>
+                    <div>
+                      <span
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold ${
+                          menu?.status === 1
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-600"
+                        }`}
+                      >
+                        {menu?.status === 1 ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <div className="flex justify-end">
+                      <DotMenu
+                        onEdit={() => {
+                          setOpenModal(true);
+                          setSelectedService(menu);
+                        }}
+                        onDelete={() => handleDeleteClick(menu._id)}
+                      />
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="px-8 py-16 text-center text-gray-500">
+                  <h3 className="text-lg font-semibold">No SubMenus Found</h3>
+                  <p className="text-sm mt-1">
+                    {searchTerm
+                      ? "No submenus match your search."
+                      : "SubMenus will appear here once created."}
+                  </p>
+                </div>
+              )}
               <div className="flex justify-between items-center px-8 py-4 ">
                 <p className="text-sm text-gray-600">
                   Showing {startIndex + 1} to{" "}
                   {Math.min(startIndex + itemsPerPage, submenus.length)} of{" "}
                   {submenus.length}
                 </p>
-
                 <div className="flex gap-3">
                   <button
                     disabled={currentPage === 1}

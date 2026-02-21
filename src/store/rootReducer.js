@@ -12,6 +12,7 @@ import dashboardReducer from "./slice/dashboardSlice";
 import offerReducer from "./slice/offerSlice";
 import adminFlightReducer from "./slice/adminFlightSlice";
 import blogReducer from "./slice/blogSlice";
+import careerReducer from "./slice/careerSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -26,5 +27,6 @@ const reducer = combineReducers({
   offer: offerReducer,
   adminFlight: adminFlightReducer,
   blog: blogReducer,
+  career: careerReducer,
 });
 export default reducer;

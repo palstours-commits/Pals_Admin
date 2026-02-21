@@ -100,65 +100,83 @@ const Zonesection = () => {
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-          {filteredZone?.map((zone) => (
-            <div
-              key={zone._id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
-            >
-              <div className="relative h-60 w-full">
-                <Image
-                  src={zone.image}
-                  alt={zone.name}
-                  className="h-full w-full object-cover transform transition duration-600 hover:scale-105 cursor-pointer"
-                />
-              </div>
-              <div className="p-5">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-sm font-semibold text-red-600">
-                    {zone.subMenuId?.name || "SubMenu"}
-                  </span>
-                  <DotMenu
-                    onEdit={() => {
-                      setSelectedZone(zone);
-                      setOpenModal(true);
-                    }}
-                    onDelete={() => handleDeleteClick(zone._id)}
+        {filteredZone?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+            {filteredZone.map((zone) => (
+              <div
+                key={zone._id}
+                className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
+              >
+                <div className="relative h-60 w-full">
+                  <Image
+                    src={zone.image}
+                    alt={zone.name}
+                    className="h-full w-full object-cover transform transition duration-600 hover:scale-105 cursor-pointer"
                   />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-800">
-                  {zone.name}
-                </h2>
-                <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                  {zone.description}
-                </p>
-                <div className="flex items-center gap-2 text-gray-500 text-sm">
-                  <Calendar className="w-4 h-4" />
-                  <span>{formatIndianDateTime(zone.createdAt)}</span>
+
+                <div className="p-5">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-sm font-semibold text-red-600">
+                      {zone.subMenuId?.name || "SubMenu"}
+                    </span>
+
+                    <DotMenu
+                      onEdit={() => {
+                        setSelectedZone(zone);
+                        setOpenModal(true);
+                      }}
+                      onDelete={() => handleDeleteClick(zone._id)}
+                    />
+                  </div>
+
+                  <h2 className="text-lg font-semibold text-gray-800">
+                    {zone.name}
+                  </h2>
+
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                    {zone.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-gray-500 text-sm">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatIndianDateTime(zone.createdAt)}</span>
+                  </div>
+
+                  <div className="mt-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        zone.deletedAt
+                          ? "bg-red-100 text-red-600"
+                          : "bg-green-100 text-green-700"
+                      }`}
+                    >
+                      {zone.deletedAt ? "Deleted" : "Active"}
+                    </span>
+                  </div>
+
+                  {zone.deletedAt && (
+                    <button
+                      onClick={() => dispatch(restoreZone(zone._id))}
+                      className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm"
+                    >
+                      Restore Zone
+                    </button>
+                  )}
                 </div>
-                <div className="mt-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      zone.deletedAt
-                        ? "bg-red-100 text-red-600"
-                        : "bg-green-100 text-green-700"
-                    }`}
-                  >
-                    {zone.deletedAt ? "Deleted" : "Active"}
-                  </span>
-                </div>
-                {zone.deletedAt && (
-                  <button
-                    onClick={() => dispatch(restoreZone(zone._id))}
-                    className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm"
-                  >
-                    Restore Zone
-                  </button>
-                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
+            <h3 className="text-lg font-semibold">No Zones Found</h3>
+            <p className="text-sm mt-1 text-center">
+              {searchTerm
+                ? "No zones match your search."
+                : "Zones will appear here once created."}
+            </p>
+          </div>
+        )}
       </div>
       {openModal && (
         <CreateZone

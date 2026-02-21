@@ -13,6 +13,7 @@ import {
 
 import { MdDateRange } from "react-icons/md";
 import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
+import { Briefcase } from "lucide-react";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -57,7 +58,7 @@ const Sidebar = ({ collapsed }) => {
         />
       </div>
 
-      <ul className="space-y-4 text-sm md:text-[15px] font-extrabold text-gray-500">
+      <ul className="space-y-3 text-sm md:text-[15px] font-extrabold text-gray-500">
         <SidebarItem
           to="/"
           icon={FiHome}
@@ -238,6 +239,12 @@ const Sidebar = ({ collapsed }) => {
           to="/blog"
           icon={RiArticleLine}
           label="Blog"
+          collapsed={collapsed}
+        />
+        <SidebarItem
+          to="/career"
+          icon={Briefcase}
+          label="Career"
           collapsed={collapsed}
         />
 
