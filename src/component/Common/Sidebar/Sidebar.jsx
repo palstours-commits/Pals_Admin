@@ -14,6 +14,7 @@ import {
 import { MdDateRange } from "react-icons/md";
 import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
 import { Briefcase } from "lucide-react";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -274,6 +275,12 @@ const Sidebar = ({ collapsed }) => {
           to="/enquiry"
           icon={FiHelpCircle}
           label="Enquiry"
+          collapsed={collapsed}
+        />
+        <SidebarItem
+          to="/reports"
+          icon={HiOutlineDocumentReport}
+          label="Report"
           collapsed={collapsed}
         />
       </ul>

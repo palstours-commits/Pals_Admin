@@ -16,6 +16,7 @@ import careerReducer from "./slice/careerSlice";
 import hotelReducer from "./slice/HotelSlice";
 import visaReducer from "./slice/visasSlice";
 import transportReducer from "./slice/transportSlice";
+import reportReducer from "./slice/reportSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -34,5 +35,6 @@ const reducer = combineReducers({
   hotels: hotelReducer,
   visas: visaReducer,
   transports: transportReducer,
+  report: reportReducer,
 });
 export default reducer;
