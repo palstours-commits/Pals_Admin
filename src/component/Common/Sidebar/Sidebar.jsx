@@ -45,7 +45,7 @@ const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
 };
 
 const Sidebar = ({ collapsed }) => {
-  const [openMenu, setOpenMenu] = useState(true);
+  const [openMenu, setOpenMenu] = useState(false);
   const [openService, setOpenService] = useState(false);
 
   return (
