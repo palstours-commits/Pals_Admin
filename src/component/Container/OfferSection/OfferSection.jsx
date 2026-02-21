@@ -95,8 +95,8 @@ const OfferSection = () => {
             <p className="text-sm text-gray-600 line-clamp-3 mb-4">
               {offer.description}
             </p>
-            <div className="flex justify-between items-center text-xs">
-              <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+            <div className="flex flex-col justify-between  text-xs gap-3">
+              <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full w-32">
                 {offer.offerCategory}
               </span>
               <span className="text-gray-500">

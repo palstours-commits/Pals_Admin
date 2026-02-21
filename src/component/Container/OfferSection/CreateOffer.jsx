@@ -20,6 +20,8 @@ const CreateOffer = ({ offerData, onClose }) => {
   );
   const { zones } = useSelector((state) => state.zone);
   const { packages } = useSelector((state) => state.package);
+  const [isNewCategory, setIsNewCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
 
   const [formData, setFormData] = useState({
     offerCategory: "",
@@ -38,8 +40,6 @@ const CreateOffer = ({ offerData, onClose }) => {
     dispatch(getZones());
     dispatch(getPackages());
   }, [dispatch]);
-
-  console.log(offerData?.offerCategory);
 
   useEffect(() => {
     if (offerData) {
@@ -64,11 +64,20 @@ const CreateOffer = ({ offerData, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const payload = {
+      ...formData,
+    };
+    if (payload.offerType === "zone") {
+      delete payload.packageId;
+    }
 
+    if (payload.offerType === "package") {
+      delete payload.zoneId;
+    }
     if (offerData) {
-      dispatch(updateOffer({ id: offerData._id, data: formData }));
+      dispatch(updateOffer({ id: offerData._id, data: payload }));
     } else {
-      dispatch(createOffer(formData));
+      dispatch(createOffer(payload));
     }
   };
 
@@ -104,25 +113,53 @@ const CreateOffer = ({ offerData, onClose }) => {
             />
           </div>
           <div>
-            <label className="text-sm ">Offer Category</label>
+            <label className="text-sm">Offer Category</label>
+
             <select
-              value={formData.offerCategory}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  offerCategory: e.target.value,
-                }))
-              }
+              value={isNewCategory ? "new" : formData.offerCategory}
+              onChange={(e) => {
+                if (e.target.value === "new") {
+                  setIsNewCategory(true);
+                  setFormData((prev) => ({ ...prev, offerCategory: "" }));
+                } else {
+                  setIsNewCategory(false);
+                  setNewCategory("");
+                  setFormData((prev) => ({
+                    ...prev,
+                    offerCategory: e.target.value,
+                  }));
+                }
+              }}
               className="w-full border border-gray-300 rounded-md px-3 py-2"
-              required
+              required={!isNewCategory}
             >
               <option value="">Select Offer Category</option>
+
               {categories?.map((cat, index) => (
                 <option key={index} value={cat}>
                   {cat}
                 </option>
               ))}
+
+              <option value="new">+ Add New Category</option>
             </select>
+
+            {isNewCategory && (
+              <input
+                type="text"
+                placeholder="Enter new category"
+                value={newCategory}
+                onChange={(e) => {
+                  setNewCategory(e.target.value);
+                  setFormData((prev) => ({
+                    ...prev,
+                    offerCategory: e.target.value,
+                  }));
+                }}
+                className="mt-2 w-full border border-gray-300 p-2 rounded outline-0"
+                required
+              />
+            )}
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
