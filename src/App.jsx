@@ -23,6 +23,9 @@ import Profile from "./pages/Profile/Profile";
 import Offers from "./pages/Offers/Offers";
 import Blog from "./pages/Blog/Blog";
 import Career from "./pages/Career/Career";
+import Hotel from "./pages/Hotel/Hotel";
+import Visa from "./pages/Visa/Visa";
+import Transport from "./pages/Transport/Transport";
 
 function App() {
   const { accessToken } = useSelector((state) => state.auth);
@@ -47,7 +50,6 @@ function App() {
         <Route path="/submenu" element={<SubMenu />} />
         <Route path="/zone" element={<Zone />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/service/flight" element={<Flight />} />
         <Route path="/packages" element={<Package />} />
         <Route path="/enquiry" element={<Enquiry />} />
         <Route path="/icon" element={<IconPage />} />
@@ -55,6 +57,10 @@ function App() {
         <Route path="/offers" element={<Offers />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/career" element={<Career />} />
+        <Route path="/service/flight" element={<Flight />} />
+        <Route path="/service/hotel" element={<Hotel />} />
+        <Route path="/service/visa" element={<Visa />} />
+        <Route path="/service/transport" element={<Transport />} />
         <Route path="/package/:id" element={<ViewPackage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/booking" element={<Booking />} />

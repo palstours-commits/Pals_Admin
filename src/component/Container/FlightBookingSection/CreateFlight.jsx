@@ -6,7 +6,7 @@ import {
   updateFlight,
   clearFlightError,
   clearFlightMessage,
-} from "../../../store/slice/adminFlightSlice";
+} from "../../../store/slice/flightSlice";
 import { notifyAlert } from "../../../utils/notificationService";
 import SingleSelectDropdown from "../../../common/SingleSelectDropdown";
 
@@ -230,13 +230,14 @@ const CreateFlight = ({ flightData, onClose }) => {
             className="w-full border border-gray-300 rounded-md px-4 py-3 outline-none"
           />
 
-          <button
-            type="submit"
-            disabled={actionLoading}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-full font-semibold"
-          >
-            {actionLoading ? "Submitting..." : "Submit"}
-          </button>
+          <div className="flex justify-end">
+            <button
+              disabled={actionLoading}
+              className="px-10 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white py-4 rounded-full cursor-pointer"
+            >
+              {actionLoading ? "Submitting..." : "Submit"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

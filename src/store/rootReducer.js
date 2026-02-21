@@ -6,13 +6,16 @@ import zoneReducer from "./slice/zoneSlice";
 import packageReducer from "./slice/packageSlice";
 import enquiryReducer from "./slice/enquirySlice";
 import contactusReducer from "./slice/contactusSlice";
-import IconReducer from "./slice/iconSlice";
+import iconReducer from "./slice/iconSlice";
 import bookingReducer from "./slice/bookingSlice";
 import dashboardReducer from "./slice/dashboardSlice";
 import offerReducer from "./slice/offerSlice";
-import adminFlightReducer from "./slice/adminFlightSlice";
+import flightReducer from "./slice/flightSlice";
 import blogReducer from "./slice/blogSlice";
 import careerReducer from "./slice/careerSlice";
+import hotelReducer from "./slice/HotelSlice";
+import visaReducer from "./slice/visasSlice";
+import transportReducer from "./slice/transportSlice";
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,
@@ -21,12 +24,15 @@ const reducer = combineReducers({
   package: packageReducer,
   enquiry: enquiryReducer,
   contactus: contactusReducer,
-  icon: IconReducer,
+  icon: iconReducer,
   booking: bookingReducer,
   dashboard: dashboardReducer,
   offer: offerReducer,
-  adminFlight: adminFlightReducer,
+  adminFlight: flightReducer,
   blog: blogReducer,
   career: careerReducer,
+  hotels: hotelReducer,
+  visas: visaReducer,
+  transports: transportReducer,
 });
 export default reducer;

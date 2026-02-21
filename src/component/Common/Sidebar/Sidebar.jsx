@@ -219,6 +219,22 @@ const Sidebar = ({ collapsed }) => {
                   Flight
                 </Link>
               </li>
+              <li
+                className="
+    relative pl-6 cursor-pointer
+    transition-all duration-300
+    before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+    before:h-[3px] before:w-2 before:bg-gray-400
+    before:transition-all before:duration-300
+    hover:text-red-500
+    hover:pl-8
+    hover:before:w-5 hover:before:bg-red-500
+  "
+              >
+                <Link to="/service/transport" className="hover:text-red-500">
+                  Transport
+                </Link>
+              </li>
             </ul>
           )}
         </li>

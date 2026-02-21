@@ -9,7 +9,7 @@ import {
   deleteFlight,
   clearFlightError,
   clearFlightMessage,
-} from "../../../store/slice/adminFlightSlice";
+} from "../../../store/slice/flightSlice";
 
 import { notifyAlert } from "../../../utils/notificationService";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
