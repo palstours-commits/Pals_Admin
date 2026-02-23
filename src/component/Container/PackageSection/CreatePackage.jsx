@@ -17,14 +17,17 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Image from "../../../common/Image";
 import ItineraryEditor from "../../../common/ItineraryEditor";
 import ImportantInfoEditor from "../../../common/ImportantInfoEditor";
+import { getIcons } from "../../../store/slice/iconSlice";
 
 const CreatePackage = ({ packageData, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { zones } = useSelector((state) => state.zone);
+  const { icons } = useSelector((state) => state.icon);
   const { actionLoading, error, message } = useSelector(
     (state) => state.package,
   );
+
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [selectedSubMenuId, setSelectedSubMenuId] = useState("");
@@ -38,7 +41,10 @@ const CreatePackage = ({ packageData, onClose }) => {
     days: "",
     nights: "",
     images: [],
-    overview: "",
+    overview: {
+      Description: "",
+      icon: [],
+    },
     tripHighlights: "",
     itinerary: [],
     importantInfo: [],
@@ -52,6 +58,10 @@ const CreatePackage = ({ packageData, onClose }) => {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(getIcons());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (packageData) {
       setFormData({
         zoneId: packageData?.zoneId?._id || "",
@@ -61,7 +71,10 @@ const CreatePackage = ({ packageData, onClose }) => {
         nights: packageData?.nights || "",
         images: [],
         slug: packageData?.slug || "",
-        overview: packageData?.overview?.Description || [],
+        overview: {
+          Description: packageData?.overview?.Description || "",
+          icon: packageData?.overview?.icon || [],
+        },
         tripHighlights: packageData?.tripHighlights || "",
         itinerary: packageData?.itinerary || [],
         importantInfo: Array.isArray(packageData?.importantInfo)
@@ -86,9 +99,24 @@ const CreatePackage = ({ packageData, onClose }) => {
     ? zones?.filter((z) => z?.subMenuId?._id === selectedSubMenuId)
     : [];
 
+  const toggleIcon = (iconId) => {
+    setFormData((prev) => {
+      const exists = prev.overview.icon.includes(iconId);
+
+      return {
+        ...prev,
+        overview: {
+          ...prev.overview,
+          icon: exists
+            ? prev.overview.icon.filter((id) => id !== iconId)
+            : [...prev.overview.icon, iconId],
+        },
+      };
+    });
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     if (name === "packageName") {
       const slug = value
         .toLowerCase()
@@ -157,7 +185,9 @@ const CreatePackage = ({ packageData, onClose }) => {
     const payload = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === "images") {
+      if (key === "overview") {
+        payload.append("overview", JSON.stringify(value));
+      } else if (key === "images") {
         value.forEach((img) => payload.append("images", img));
       } else if (key === "itinerary") {
         payload.append("itinerary", JSON.stringify(value));
@@ -169,12 +199,7 @@ const CreatePackage = ({ packageData, onClose }) => {
     });
 
     if (packageData) {
-      dispatch(
-        updatePackage({
-          id: packageData._id,
-          data: payload,
-        }),
-      );
+      dispatch(updatePackage({ id: packageData._id, data: payload }));
     } else {
       dispatch(createPackage(payload));
     }
@@ -413,14 +438,49 @@ const CreatePackage = ({ packageData, onClose }) => {
                 )}
               </div>
               <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Overview Icons
+                </label>
+
+                <div className="grid grid-cols-6 gap-4">
+                  {icons?.map((icon) => {
+                    const selected = formData.overview.icon.includes(icon._id);
+                    return (
+                      <div
+                        key={icon._id}
+                        onClick={() => toggleIcon(icon._id)}
+                        className={`border rounded-lg p-2 cursor-pointer flex flex-col items-center justify-center
+            ${selected ? "border-green-600 bg-green-50" : "border-gray-300"}
+          `}
+                      >
+                        <Image
+                          src={icon.iconPath}
+                          alt={icon.name}
+                          className="w-10 h-10"
+                        />
+                        <p className="text-xs mt-1 text-center">{icon.name}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div>
                 <label className="text-sm font-medium mb-1 block">
                   Overview
                 </label>
                 <textarea
                   name="overview"
                   rows={3}
-                  value={formData.overview}
-                  onChange={handleChange}
+                  value={formData.overview.Description}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      overview: {
+                        ...formData.overview,
+                        Description: e.target.value,
+                      },
+                    })
+                  }
                   className="textarea border border-gray-300 rounded-lg p-4 space-y-3 w-full outline-0"
                 />
               </div>

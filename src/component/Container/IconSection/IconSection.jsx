@@ -28,7 +28,7 @@ const IconSection = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(null);
 
-  const totalPages = Math.ceil(icons.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(icons.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentIcons = icons?.slice(startIndex, startIndex + itemsPerPage);
 
@@ -66,7 +66,7 @@ const IconSection = () => {
       });
       dispatch(clearIconError());
     }
-  }, [deletedMessage, deletedError]);
+  }, [deletedMessage, deletedError, dispatch]);
 
   return (
     <>
@@ -101,7 +101,7 @@ const IconSection = () => {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="grid grid-cols-5 px-8 py-5 items-center text-sm"
+                className="grid grid-cols-4 px-8 py-5 items-center text-sm"
               >
                 <div className="font-medium">{icon?.name}</div>
                 <div>{formatIndianDateTime(icon?.createdAt)}</div>

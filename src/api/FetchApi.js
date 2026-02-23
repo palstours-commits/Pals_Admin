@@ -39,11 +39,11 @@ export const FetchApi = async ({
         json = JSON.parse(rawText);
       } catch {}
 
-      const errorMessage =
-        json?.data?.errors ||
-        json?.errors ||
-        json?.message ||
-        "Something went wrong";
+      const errorMessage = Array.isArray(json?.data?.errors)
+        ? json.data.errors.join(", ")
+        : json?.data?.errors || Array.isArray(json?.errors)
+          ? json.errors.join(", ")
+          : json?.errors || json?.message || "Something went wrong";
       throw new Error(errorMessage);
     }
     return contentType?.includes("application/json")

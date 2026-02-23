@@ -223,11 +223,22 @@ const packageSlice = createSlice({
         state.message =
           action.payload?.message || "Package created successfully";
       })
+      .addCase(createPackage.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload || "Failed to create package";
+      })
 
+      .addCase(updatePackage.pending, (state) => {
+        state.actionLoading = true;
+      })
       .addCase(updatePackage.fulfilled, (state, action) => {
         state.actionLoading = false;
         state.message =
           action.payload?.message || "Package updated successfully";
+      })
+      .addCase(updatePackage.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.error = action.payload || "Failed to create package";
       })
 
       .addCase(deletePackage.fulfilled, (state, action) => {
