@@ -1,4 +1,6 @@
-import { Calendar } from "lucide-react";
+"use client";
+
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getZones,
@@ -28,13 +30,27 @@ const Zonesection = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredZone = zones?.filter((menu) =>
-    menu?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     dispatch(getZones());
   }, [dispatch]);
+
+  const filteredZone = zones?.filter((zone) =>
+    zone?.name?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const totalPages = Math.max(1, Math.ceil(filteredZone.length / itemsPerPage));
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentZones = filteredZone.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   useEffect(() => {
     if (message) {
@@ -49,7 +65,7 @@ const Zonesection = () => {
     if (error) {
       notifyAlert({
         title: "Error",
-        message,
+        message: error,
         type: "error",
       });
       dispatch(clearZoneError());
@@ -63,7 +79,7 @@ const Zonesection = () => {
       });
       dispatch(clearDeletedZoneMessage());
     }
-  }, [message, error, deletedMessage]);
+  }, [message, error, deletedMessage, dispatch]);
 
   const handleDeleteClick = (id) => {
     setDeleteId(id);
@@ -81,16 +97,17 @@ const Zonesection = () => {
     <>
       <div className="min-h-screen">
         <div className="flex justify-between items-center mb-6 px-8">
-          <h2 className="text-xl font-bold">Zone List ({zones?.length})</h2>
+          <h2 className="text-xl font-bold">
+            Zone List ({filteredZone?.length})
+          </h2>
+
           <div className="flex gap-3">
             <input
               type="text"
               placeholder="Search by name or status..."
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-              }}
-              className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none "
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border border-gray-300 px-4 py-2 rounded-md text-sm w-64 focus:outline-none"
             />
             <button
               onClick={() => setOpenModal(true)}
@@ -100,73 +117,104 @@ const Zonesection = () => {
             </button>
           </div>
         </div>
-        {filteredZone?.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-            {filteredZone.map((zone) => (
-              <div
-                key={zone._id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
-              >
-                <div className="relative h-60 w-full">
-                  <Image
-                    src={zone.image}
-                    alt={zone.name}
-                    className="h-full w-full object-cover transform transition duration-600 hover:scale-105 cursor-pointer"
-                  />
-                </div>
-
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-sm font-semibold text-red-600">
-                      {zone.subMenuId?.name || "SubMenu"}
-                    </span>
-
-                    <DotMenu
-                      onEdit={() => {
-                        setSelectedZone(zone);
-                        setOpenModal(true);
-                      }}
-                      onDelete={() => handleDeleteClick(zone._id)}
+        {currentZones?.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+              {currentZones.map((zone) => (
+                <div
+                  key={zone._id}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200"
+                >
+                  <div className="relative h-60 w-full">
+                    <Image
+                      src={zone.image}
+                      alt={zone.name}
+                      className="h-full w-full object-cover transform transition duration-600 hover:scale-105 cursor-pointer"
                     />
                   </div>
 
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {zone.name}
-                  </h2>
+                  <div className="p-5">
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-sm font-semibold text-red-600">
+                        {zone.subMenuId?.name || "SubMenu"}
+                      </span>
 
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-                    {zone.description}
-                  </p>
+                      <DotMenu
+                        onEdit={() => {
+                          setSelectedZone(zone);
+                          setOpenModal(true);
+                        }}
+                        onDelete={() => handleDeleteClick(zone._id)}
+                      />
+                    </div>
 
-                  <div className="flex items-center gap-2 text-gray-500 text-sm">
-                    <Calendar className="w-4 h-4" />
-                    <span>{formatIndianDateTime(zone.createdAt)}</span>
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {zone.name}
+                    </h2>
+
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                      {zone.description}
+                    </p>
+
+                    <div className="flex items-center gap-2 text-gray-500 text-sm">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatIndianDateTime(zone.createdAt)}</span>
+                    </div>
+
+                    <div className="mt-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          zone.deletedAt
+                            ? "bg-red-100 text-red-600"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {zone.deletedAt ? "Deleted" : "Active"}
+                      </span>
+                    </div>
+
+                    {zone.deletedAt && (
+                      <button
+                        onClick={() => dispatch(restoreZone(zone._id))}
+                        className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm"
+                      >
+                        Restore Zone
+                      </button>
+                    )}
                   </div>
-
-                  <div className="mt-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        zone.deletedAt
-                          ? "bg-red-100 text-red-600"
-                          : "bg-green-100 text-green-700"
-                      }`}
-                    >
-                      {zone.deletedAt ? "Deleted" : "Active"}
-                    </span>
-                  </div>
-
-                  {zone.deletedAt && (
-                    <button
-                      onClick={() => dispatch(restoreZone(zone._id))}
-                      className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm"
-                    >
-                      Restore Zone
-                    </button>
-                  )}
                 </div>
+              ))}
+            </div>
+            <div className="flex justify-between items-center px-8 py-4">
+              <p className="text-sm text-gray-600">
+                Showing {startIndex + 1} to{" "}
+                {Math.min(startIndex + itemsPerPage, filteredZone.length)} of{" "}
+                {filteredZone.length}
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  className="w-10 h-10 border rounded-lg flex items-center justify-center"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                <button className="w-10 h-10 bg-green-800 text-white rounded-lg">
+                  {currentPage}
+                </button>
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  className="w-10 h-10 border rounded-lg flex items-center justify-center"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-gray-500">
             <h3 className="text-lg font-semibold">No Zones Found</h3>
@@ -178,6 +226,7 @@ const Zonesection = () => {
           </div>
         )}
       </div>
+
       {openModal && (
         <CreateZone
           zone={selectedZone}
@@ -187,6 +236,7 @@ const Zonesection = () => {
           }}
         />
       )}
+
       <ConfirmDeleteModal
         isOpen={confirmOpen}
         title="Are you sure you want to delete this zone?"
