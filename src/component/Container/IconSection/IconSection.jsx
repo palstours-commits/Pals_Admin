@@ -88,7 +88,7 @@ const IconSection = () => {
             animate={{ opacity: 1 }}
             className="bg-white rounded shadow overflow-x-auto"
           >
-            <div className="grid grid-cols-5 px-7 py-4 font-bold border-b border-gray-300">
+            <div className="grid grid-cols-4 px-7 py-4 font-bold border-b border-gray-300">
               <div>Name</div>
               <div>Created</div>
               <div>Icon</div>
