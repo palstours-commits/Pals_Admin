@@ -61,7 +61,6 @@ export const ItineraryEditor = ({ value = [], onChange }) => {
           />
         </div>
       ))}
-
       <button
         type="button"
         onClick={addDay}
