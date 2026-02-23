@@ -1,14 +1,12 @@
 export const ItineraryEditor = ({ value = [], onChange }) => {
   const addDay = () => {
-    onChange([
-      ...value,
-      {
-        day: value.length + 1,
-        title: "",
-        location: "",
-        content: "",
-      },
-    ]);
+    const newDay = {
+      day: value.length + 1,
+      title: `Day ${value.length + 1}`, // automatically set title as Day 1, Day 2...
+      location: "",
+      content: "",
+    };
+    onChange([...value, newDay]);
   };
 
   const updateDay = (index, field, fieldValue) => {
@@ -18,8 +16,13 @@ export const ItineraryEditor = ({ value = [], onChange }) => {
   };
 
   const removeDay = (index) => {
-    const updated = value.filter((_, i) => i !== index);
-    onChange(updated.map((d, i) => ({ ...d, day: i + 1 })));
+    const updated = value.filter((_, i) => i !== index)
+      .map((d, i) => ({
+        ...d,
+        day: i + 1,
+        title: `Day ${i + 1}`, // update title automatically when a day is removed
+      }));
+    onChange(updated);
   };
 
   return (
@@ -40,13 +43,7 @@ export const ItineraryEditor = ({ value = [], onChange }) => {
             </button>
           </div>
 
-          <input
-            placeholder="Title (Arrival, Sightseeing...)"
-            value={item.title}
-            onChange={(e) => updateDay(index, "title", e.target.value)}
-            className="w-full border border-gray-300 rounded-md p-2 outline-0"
-          />
-
+          {/* Location input */}
           <input
             placeholder="Location"
             value={item.location}
@@ -54,6 +51,7 @@ export const ItineraryEditor = ({ value = [], onChange }) => {
             className="w-full border border-gray-300 rounded-md p-2 outline-0"
           />
 
+          {/* Day description */}
           <textarea
             placeholder="Day description"
             value={item.content}
