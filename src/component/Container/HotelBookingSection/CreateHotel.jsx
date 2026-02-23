@@ -22,6 +22,7 @@ const initialForm = {
   checkInDate: "",
   checkOutDate: "",
   noOfAdults: 1,
+  mealType: "",
   noOfChildren: 0,
   message: "",
 };
@@ -163,6 +164,18 @@ const CreateHotel = ({ hotelData, onClose }) => {
                 className="w-full border border-gray-300 rounded-md px-4 py-3 outline-0"
               />
             </div>
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-gray-500">
+              MealType
+            </label>
+            <input
+              name="mealType"
+              value={formData.mealType}
+              onChange={handleChange}
+              placeholder="Meal Type"
+              className="w-full border border-gray-300 rounded-md px-4 py-3 outline-none"
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
