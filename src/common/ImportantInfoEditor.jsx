@@ -3,10 +3,9 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const ImportantInfoEditor = ({ value = [], onChange }) => {
-  // Ensure at least one item exists
-
   const safeValue = Array.isArray(value) ? value : [];
   const items = safeValue.length ? safeValue : [{ title: "", content: "" }];
+
   const updateItem = (index, key, val) => {
     const updated = [...items];
     updated[index][key] = val;
@@ -15,6 +14,12 @@ const ImportantInfoEditor = ({ value = [], onChange }) => {
 
   const addEmptyRow = () => {
     onChange([...items, { title: "", content: "" }]);
+  };
+
+  const removeRow = (index) => {
+    if (items.length === 1) return; // prevent removing last row
+    const updated = items.filter((_, i) => i !== index);
+    onChange(updated);
   };
 
   return (
@@ -36,12 +41,24 @@ const ImportantInfoEditor = ({ value = [], onChange }) => {
               <button
                 type="button"
                 onClick={addEmptyRow}
-                className="text-green-600    font-semibold cursor-pointer"
+                className="text-green-600 font-semibold text-xl cursor-pointer"
+                title="Add"
               >
                 +
               </button>
             )}
+            {items.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeRow(index)}
+                className="text-red-600 font-semibold text-xl cursor-pointer"
+                title="Remove"
+              >
+                −
+              </button>
+            )}
           </div>
+
           <CKEditor
             editor={ClassicEditor}
             data={item.content}

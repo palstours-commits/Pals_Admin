@@ -77,9 +77,12 @@ const CreatePackage = ({ packageData, onClose }) => {
         },
         tripHighlights: packageData?.tripHighlights || "",
         itinerary: packageData?.itinerary || [],
-        importantInfo: Array.isArray(packageData?.importantInfo)
-          ? packageData.importantInfo
-          : [],
+        overview: {
+          Description: packageData?.overview?.Description || "",
+          icon: Array.isArray(packageData?.overview?.icon)
+            ? packageData.overview.icon.map((i) => i._id)
+            : [],
+        },
         isPopularDestinations: packageData?.isPopularDestinations || false,
         newArrivals: packageData?.newArrivals || false,
         isTrending: packageData?.isTrending || false,
