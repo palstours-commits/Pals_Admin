@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
 import {
-  FiHome,
   FiBox,
-  FiSettings,
-  FiMail,
-  FiHelpCircle,
   FiChevronDown,
-  FiMenu,
   FiGrid,
+  FiHelpCircle,
+  FiHome,
+  FiMail,
+  FiMenu,
+  FiSettings,
 } from "react-icons/fi";
+import { Link, NavLink } from "react-router-dom";
 
-import { MdDateRange } from "react-icons/md";
-import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
 import { Briefcase } from "lucide-react";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { MdDateRange } from "react-icons/md";
+import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
 
 const SidebarItem = ({ to, icon: Icon, label, collapsed }) => {
   return (
@@ -234,6 +234,22 @@ const Sidebar = ({ collapsed }) => {
               >
                 <Link to="/service/transport" className="hover:text-red-500">
                   Transport
+                </Link>
+              </li>
+              <li
+                className="
+    relative pl-6 cursor-pointer
+    transition-all duration-300
+    before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
+    before:h-[3px] before:w-2 before:bg-gray-400
+    before:transition-all before:duration-300
+    hover:text-red-500
+    hover:pl-8
+    hover:before:w-5 hover:before:bg-red-500
+  "
+              >
+                <Link to="/service/visa" className="hover:text-red-500">
+                  Visa
                 </Link>
               </li>
             </ul>

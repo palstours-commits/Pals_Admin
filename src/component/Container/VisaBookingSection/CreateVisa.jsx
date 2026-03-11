@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import SingleSelectDropdown from "../../../common/SingleSelectDropdown";
 import {
-  createVisa,
-  updateVisa,
   clearVisaError,
   clearVisaMessage,
+  createVisa,
   getVisas,
+  updateVisa,
 } from "../../../store/slice/visasSlice";
 import { notifyAlert } from "../../../utils/notificationService";
-import SingleSelectDropdown from "../../../common/SingleSelectDropdown";
 
 const initialForm = {
   firstName: "",
