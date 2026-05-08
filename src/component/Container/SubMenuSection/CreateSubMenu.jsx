@@ -24,8 +24,10 @@ const CreateSubMenu = ({ service, onClose }) => {
     name: service?.name || "",
     slug: service?.slug || "",
     bannerImage: service?.bannerImage || null,
-    status: service?.status || "Active",
+    status: Number(service?.status ?? 1),
   });
+
+  const [newImage, setNewImage] = useState(null);
 
   useEffect(() => {
     dispatch(getMenus());
@@ -48,12 +50,14 @@ const CreateSubMenu = ({ service, onClose }) => {
     } else {
       setForm((prev) => ({
         ...prev,
-        [name]: value,
+        [name]: Number(value),
       }));
     }
   };
 
   const handleImageChange = (file) => {
+    setNewImage(file);
+
     setForm((prev) => ({
       ...prev,
       bannerImage: file,
@@ -64,17 +68,20 @@ const CreateSubMenu = ({ service, onClose }) => {
     if (!form.menuId) {
       return alert("Please select a menu");
     }
+
     if (!form.name) {
       return alert("Submenu name is required");
     }
 
     const formData = new FormData();
+
     formData.append("menuId", form.menuId);
     formData.append("name", form.name);
     formData.append("slug", form.slug);
     formData.append("status", form.status);
-    if (form.bannerImage) {
-      formData.append("bannerImage", form.bannerImage);
+
+    if (newImage) {
+      formData.append("bannerImage", newImage);
     }
 
     if (service?._id) {
@@ -91,7 +98,9 @@ const CreateSubMenu = ({ service, onClose }) => {
         message,
         type: "success",
       });
+
       onClose();
+
       dispatch(clearSubMenuMessage());
     }
 
@@ -101,9 +110,10 @@ const CreateSubMenu = ({ service, onClose }) => {
         message: error,
         type: "error",
       });
+
       dispatch(clearSubMenuError());
     }
-  }, [message, error]);
+  }, [message, error, dispatch, onClose]);
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -112,26 +122,37 @@ const CreateSubMenu = ({ service, onClose }) => {
           <h2 className="text-xl font-semibold">
             {service ? "Update SubMenu" : "Create SubMenu"}
           </h2>
+
           <button onClick={onClose}>
             <X className="w-5 h-5 text-gray-500 hover:text-black" />
           </button>
         </div>
+
         <div className="px-6 py-6 space-y-6">
-          <label className="block text-sm font-medium mb-2">
-            Banner Image<span>*</span>
-          </label>
-          <div className="flex justify-center">
-            <ImageUpload
-              size="1920x300"
-              image={form.bannerImage}
-              onImageChange={handleImageChange}
-            />
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Banner Image
+            </label>
+
+            <div className="flex justify-center">
+              <ImageUpload
+                size="1920x300"
+                image={form.bannerImage}
+                onImageChange={handleImageChange}
+              />
+            </div>
           </div>
+
           <SingleSelectDropdown
             label="Select Menu *"
             options={menus}
             value={form.menuId}
-            onChange={(val) => setForm((prev) => ({ ...prev, menuId: val }))}
+            onChange={(val) =>
+              setForm((prev) => ({
+                ...prev,
+                menuId: val,
+              }))
+            }
             searchable
             labelKey="name"
             placeholder="Select a menu"
@@ -141,45 +162,56 @@ const CreateSubMenu = ({ service, onClose }) => {
             <label className="block text-sm font-medium mb-2">
               SubMenu Name *
             </label>
+
             <input
               type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-md
-                         focus:ring-2 focus:ring-green-700 outline-none"
+              className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-green-700 outline-none"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium mb-3">Status</label>
+            <label className="block text-sm font-medium mb-3">
+              Status
+            </label>
+
             <div className="flex gap-6">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="status"
-                  value="Active"
-                  checked={form.status === "Active"}
+                  value={1}
+                  checked={form.status === 1}
                   onChange={handleChange}
                   className="accent-green-700"
                 />
-                <span className="text-green-700 font-medium">Active</span>
+
+                <span className="text-green-700 font-medium">
+                  Active
+                </span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="status"
-                  value="Inactive"
-                  checked={form.status === "Inactive"}
+                  value={0}
+                  checked={form.status === 0}
                   onChange={handleChange}
                   className="accent-red-600"
                 />
-                <span className="text-red-600 font-medium">Inactive</span>
+
+                <span className="text-red-600 font-medium">
+                  Inactive
+                </span>
               </label>
             </div>
           </div>
         </div>
-        <div className="flex justify-end gap-3 px-6 py-4  bg-gray-50">
+
+        <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50">
           <button
             onClick={onClose}
             className="px-5 py-2 border rounded-md hover:bg-gray-100"
