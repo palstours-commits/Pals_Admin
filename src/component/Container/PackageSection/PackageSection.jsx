@@ -102,22 +102,20 @@ const PackageSection = () => {
               <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => setViewType("grid")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition ${
-                    viewType === "grid"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition ${viewType === "grid"
                       ? "bg-green-800 text-white shadow"
                       : "text-gray-600 hover:bg-white"
-                  }`}
+                    }`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </button>
 
                 <button
                   onClick={() => setViewType("list")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition ${
-                    viewType === "list"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition ${viewType === "list"
                       ? "bg-green-800 text-white shadow"
                       : "text-gray-600 hover:bg-white"
-                  }`}
+                    }`}
                 >
                   <List className="w-4 h-4" />
                 </button>
@@ -164,11 +162,11 @@ const PackageSection = () => {
                         />
                       </div>
 
-                      <div className="flex gap-2 pb-2 overflow-x-auto scrollbar-hide text-sm">
+                      <div className="flex gap-2 pb-2 overflow-x-auto scrollbar-hide whitespace-nowrap">
                         {pkg.destinations?.map((item, index) => (
                           <span
                             key={index}
-                            className="bg-gray-200 rounded-full px-3 py-1"
+                            className="bg-gray-200 text-xs rounded-full px-3 py-1 shrink-0"
                           >
                             {item}
                           </span>
@@ -194,11 +192,10 @@ const PackageSection = () => {
 
                       <div className="mt-3">
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            pkg.status === 1
+                          className={`px-3 py-1 rounded-full text-xs font-semibold ${pkg.status === 1
                               ? "bg-green-100 text-green-700"
                               : "bg-red-100 text-red-600"
-                          }`}
+                            }`}
                         >
                           {pkg.status === 1 ? "Active" : "Inactive"}
                         </span>
@@ -257,11 +254,10 @@ const PackageSection = () => {
                         </span>
                         <span>{formatIndianDateTime(pkg.createdAt)}</span>
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            pkg.status === 1
+                          className={`px-2 py-1 rounded-full text-xs font-semibold ${pkg.status === 1
                               ? "bg-green-100 text-green-700"
                               : "bg-red-100 text-red-600"
-                          }`}
+                            }`}
                         >
                           {pkg.status === 1 ? "Active" : "Inactive"}
                         </span>

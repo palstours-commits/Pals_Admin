@@ -15,7 +15,7 @@ const Image = ({ src = "", alt = "image", className = "", style = {} }) => {
             className={className}
             style={style}
             onError={(e) => {
-                e.currentTarget.src = "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg";
+                e.currentTarget.src = "https://assets.webdads2u.com/images/1778042348274-image-not-found--1-.png";
             }}
         />
     );
