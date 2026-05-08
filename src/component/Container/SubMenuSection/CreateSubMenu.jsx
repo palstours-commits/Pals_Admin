@@ -56,12 +56,30 @@ const CreateSubMenu = ({ service, onClose }) => {
   };
 
   const handleImageChange = (file) => {
-    setNewImage(file);
+    if (file) {
+      const img = new Image();
 
-    setForm((prev) => ({
-      ...prev,
-      bannerImage: file,
-    }));
+      img.onload = () => {
+        if (img.width !== 1920 || img.height !== 300) {
+          notifyAlert({
+            title: "Invalid Image Size",
+            message: "Image size must be 1920 x 300",
+            type: "error",
+          });
+
+          return;
+        }
+
+        setNewImage(file);
+
+        setForm((prev) => ({
+          ...prev,
+          bannerImage: file,
+        }));
+      };
+
+      img.src = URL.createObjectURL(file);
+    }
   };
 
   const handleSave = () => {
@@ -141,6 +159,10 @@ const CreateSubMenu = ({ service, onClose }) => {
                 onImageChange={handleImageChange}
               />
             </div>
+
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              Only 1920 x 300 size allowed
+            </p>
           </div>
 
           <SingleSelectDropdown
