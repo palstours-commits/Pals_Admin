@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FetchApi } from "../../api/FetchApi";
 
 export const createVisa = createAsyncThunk(
@@ -88,6 +88,7 @@ export const updateVisa = createAsyncThunk(
     }
   },
 );
+
 
 export const deleteVisa = createAsyncThunk(
   "adminVisa/deleteVisa",

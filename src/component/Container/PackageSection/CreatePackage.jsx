@@ -224,16 +224,24 @@ const CreatePackage = ({ packageData, onClose }) => {
   return (
     <div className="m-6">
       <div className="p-6 max-w-7xl mx-auto bg-white rounded shadow ">
-        <h1
+        {/* <h1
+          className="text-2xl font-bold mb-6 pb-4 cursor-pointer"
+          onClick={onClose}
+        >
+          ← {packageData ? "Update Package" : "Create Package"}
+        </h1> */}
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="lg:sticky lg:top-0 self-start space-y-6">
+              <div>
+
+               <h1
           className="text-2xl font-bold mb-6 pb-4 cursor-pointer"
           onClick={onClose}
         >
           ← {packageData ? "Update Package" : "Create Package"}
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
+
                 <label className="text-sm font-medium mb-1 block">
                   Holiday Type *
                 </label>

@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import ImageUpload from "../../../common/ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
+import ImageUpload from "../../../common/ImageUpload";
 import {
   clearMenuError,
   clearMenuMessage,
@@ -15,6 +15,7 @@ const ServiceStatusModal = ({ service, onClose }) => {
   const { message, error } = useSelector((state) => state.menu);
   const [form, setForm] = useState({
     name: service?.name || "",
+    order: service?.order || 0,
     slug: service?.slug || "",
     image: service?.image || null,
     status: service?.status || "Active",
@@ -24,6 +25,7 @@ const ServiceStatusModal = ({ service, onClose }) => {
     if (service) {
       setForm({
         name: service.name || "",
+        order: service.order || 0,
         slug: service.slug || "",
         image: service.imagePath || null,
         status: service.status || "Active",
@@ -60,20 +62,22 @@ const ServiceStatusModal = ({ service, onClose }) => {
   };
 
   const handleSave = () => {
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("slug", form.slug);
-    formData.append("status", form.status);
+  const formData = new FormData();
+  formData.append("name", form.name);
+  formData.append("slug", form.slug);
+  formData.append("status", form.status);
+  formData.append("order", form.order);  
 
-    if (form.image) {
-      formData.append("image", form.image);
-    }
-    if (service?._id) {
-      dispatch(updateMenu({ id: service._id, data: formData }));
-    } else {
-      dispatch(createMenu(formData));
-    }
-  };
+  if (form.image) {
+    formData.append("image", form.image);
+  }
+
+  if (service?._id) {
+    dispatch(updateMenu({ id: service._id, data: formData }));
+  } else {
+    dispatch(createMenu(formData));
+  }
+};
 
   useEffect(() => {
     if (message) {
@@ -126,6 +130,20 @@ const ServiceStatusModal = ({ service, onClose }) => {
               type="text"
               name="name"
               value={form.name}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-md 
+                         focus:ring-2 focus:ring-green-700 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Order <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              name="order"
+              value={form.order}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-md 
                          focus:ring-2 focus:ring-green-700 outline-none"

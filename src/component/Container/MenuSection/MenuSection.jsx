@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearMenuError,
@@ -10,10 +10,10 @@ import {
 } from "../../../store/slice/menuSlice";
 import { formatIndianDateTime } from "../../../utils/formatDateTime";
 
-import Image from "../../../common/Image";
 import ConfirmDeleteModal from "../../../common/CommonDeleteModel";
-import { notifyAlert } from "../../../utils/notificationService";
 import DotMenu from "../../../common/DotMenu";
+import Image from "../../../common/Image";
+import { notifyAlert } from "../../../utils/notificationService";
 import ServiceStatusModal from "./CreateMenu";
 
 const MenuSection = () => {
@@ -114,10 +114,11 @@ const MenuSection = () => {
             className="bg-white rounded shadow overflow-x-auto overflow-y-visible"
           >
             <div>
-              <div className="grid grid-cols-5  px-7 py-4 font-bold border-b border-gray-300">
+              <div className="grid grid-cols-6 px-7 py-4 font-bold border-b border-gray-300">
                 <div>Name</div>
                 <div>Created</div>
                 <div>Images</div>
+                <div>Order</div>
                 <div>Status</div>
                 <div className="text-right">Action</div>
               </div>
@@ -129,9 +130,10 @@ const MenuSection = () => {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="grid grid-cols-5 px-8 py-5 items-center text-sm"
+                    className="grid grid-cols-6 px-8 py-5 items-center text-sm"
                   >
                     <div className="font-medium">{menu?.name}</div>
+                    
                     <div>{formatIndianDateTime(menu?.createdAt)}</div>
                     <div>
                       <Image
@@ -140,6 +142,8 @@ const MenuSection = () => {
                         className="w-15 h-15"
                       />
                     </div>
+                    <div>{menu?.order}</div>
+
                     <div>
                       <span
                         className={`px-4 py-2 rounded-xl text-sm font-semibold ${
@@ -151,6 +155,7 @@ const MenuSection = () => {
                         {menu?.status === 1 ? "Active" : "Inactive"}
                       </span>
                     </div>
+
                     <div className="flex justify-end">
                       <DotMenu
                         onEdit={() => {
