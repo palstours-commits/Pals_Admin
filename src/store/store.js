@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./rootReducer";
 import { persistConfig } from "./rootConfig";
+import submenuReducer from "./slice/submenuSlice";
 import {
   persistStore,
   persistReducer,
@@ -15,6 +16,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  submenu : submenuReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -8,12 +8,13 @@ export const getSubMenus = createAsyncThunk(
 
     try {
       const response = await FetchApi({
-        endpoint: "/admin/submenu",
+        endpoint: "/user/menu",
         method: "GET",
         token,
       });
-
-      return response?.data;
+console.log("SubMenus fetched:", response?.data?.menus);
+      return response?.data.menus;
+      
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err.message || "Failed to fetch submenus",
@@ -160,9 +161,9 @@ const submenuSlice = createSlice({
         state.error = null;
       })
       .addCase(getSubMenus.fulfilled, (state, action) => {
-        state.loading = false;
-        state.submenus = action.payload?.items;
-      })
+  state.loading = false;
+  state.submenus = action.payload || [];
+})
       .addCase(getSubMenus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
