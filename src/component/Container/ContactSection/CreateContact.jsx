@@ -9,28 +9,50 @@ import {
 } from "../../../store/slice/contactusSlice";
 import { notifyAlert } from "../../../utils/notificationService";
 
+const STATUS_OPTIONS = ["PENDING", "CONFIRMED", "CANCELLED", "RESOLVED"];
+
+const ACCOMMODATION_OPTIONS = [
+  { _id: "Not Yet Decided", name: "Not Yet Decided" },
+  { _id: "Only HomeStays/Bead & Breakfast", name: "Only HomeStays/Bead & Breakfast" },
+  { _id: "Budget Hotels", name: "Budget Hotels" },
+  { _id: "3 Star Hotels/ HouseBoat", name: "3 Star Hotels/ HouseBoat" },
+  { _id: "4 Star Hotels/ HouseBoat", name: "4 Star Hotels/ HouseBoat" },
+  { _id: "Luxury 5 Star Hotels/ HouseBoat", name: "Luxury 5 Star Hotels/ HouseBoat" },
+  { _id: "HouseBoat Day Cruise", name: "HouseBoat Day Cruise" },
+  { _id: "HouseBoat Overnight Stay & Cruise", name: "HouseBoat Overnight Stay & Cruise" },
+];
+
 const CreateContact = ({ contactData, onClose }) => {
   const dispatch = useDispatch();
 
   const { actionLoading, error, message } = useSelector(
-    (state) => state.contactus,
+    (state) => state.contactus
   );
 
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     mobile: "",
-    country: "",
+    tentativeArrivalDate: "",
+    numberOfNights: "",
+    accommodationType: "",
     message: "",
+    contactUsStatus: "PENDING",
   });
 
   useEffect(() => {
     if (contactData) {
       setFormData({
-        name: contactData?.name || "",
+        firstName: contactData?.firstName || "",
+        lastName: contactData?.lastName || "",
         email: contactData?.email || "",
         mobile: contactData?.mobile || "",
-        country: contactData?.country || "",
+        tentativeArrivalDate: contactData?.tentativeArrivalDate
+          ? contactData.tentativeArrivalDate.split("T")[0]
+          : "",
+        numberOfNights: contactData?.numberOfNights || "",
+        accommodationType: contactData?.accommodationType || "",
         message: contactData?.message || "",
         contactUsStatus: contactData?.contactUsStatus || "PENDING",
       });
@@ -44,36 +66,25 @@ const CreateContact = ({ contactData, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const payload = {
+      ...formData,
+      numberOfNights: formData.numberOfNights ? Number(formData.numberOfNights) : "",
+    };
     if (contactData) {
-      dispatch(
-        updateContact({
-          id: contactData._id,
-          data: formData,
-        }),
-      );
+      dispatch(updateContact({ id: contactData._id, data: payload }));
     } else {
-      dispatch(createContact(formData));
+      dispatch(createContact(payload));
     }
   };
 
   useEffect(() => {
     if (message) {
-      notifyAlert({
-        title: "Success",
-        message,
-        type: "success",
-      });
+      notifyAlert({ title: "Success", message, type: "success" });
       dispatch(clearContactMessage());
       onClose();
     }
-
     if (error) {
-      notifyAlert({
-        title: "Error",
-        message: error,
-        type: "error",
-      });
+      notifyAlert({ title: "Error", message: error, type: "error" });
       dispatch(clearContactError());
     }
   }, [message, error, dispatch, onClose]);
@@ -91,10 +102,21 @@ const CreateContact = ({ contactData, onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm font-medium block mb-1">Name *</label>
+              <label className="text-sm font-medium block mb-1">First Name *</label>
               <input
-                name="name"
-                value={formData.name}
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium block mb-1">Last Name *</label>
+              <input
+                name="lastName"
+                value={formData.lastName}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
@@ -125,14 +147,64 @@ const CreateContact = ({ contactData, onClose }) => {
             </div>
 
             <div>
-              <label className="text-sm font-medium block mb-1">Country</label>
+              <label className="text-sm font-medium block mb-1">Tentative Arrival Date</label>
               <input
-                name="country"
-                value={formData.country}
+                type="date"
+                name="tentativeArrivalDate"
+                value={formData.tentativeArrivalDate}
                 onChange={handleChange}
+                min={new Date().toISOString().split("T")[0]}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
               />
             </div>
+
+            <div>
+              <label className="text-sm font-medium block mb-1">Number of Nights</label>
+              <input
+                type="number"
+                name="numberOfNights"
+                value={formData.numberOfNights}
+                onChange={handleChange}
+                min={1}
+                max={99}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium block mb-1">Accommodation Type</label>
+              <select
+                name="accommodationType"
+                value={formData.accommodationType}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0 bg-white"
+              >
+                <option value="">Select Type of Stay</option>
+                {ACCOMMODATION_OPTIONS.map((opt) => (
+                  <option key={opt._id} value={opt._id}>
+                    {opt.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {contactData && (
+              <div>
+                <label className="text-sm font-medium block mb-1">Status</label>
+                <select
+                  name="contactUsStatus"
+                  value={formData.contactUsStatus}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0 bg-white"
+                >
+                  {STATUS_OPTIONS.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div>
@@ -145,6 +217,7 @@ const CreateContact = ({ contactData, onClose }) => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 outline-0"
             />
           </div>
+
           <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
@@ -153,7 +226,6 @@ const CreateContact = ({ contactData, onClose }) => {
             >
               Cancel
             </button>
-
             <button
               type="submit"
               className="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800"

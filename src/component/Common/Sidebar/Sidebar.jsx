@@ -122,7 +122,7 @@ const Sidebar = ({ collapsed }) => {
                 <Link to="/menus">Menus</Link>
               </li>
 
-              <li
+              {/* <li
                 className="relative pl-6 cursor-pointer
       transition-all duration-300
       before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2
@@ -133,7 +133,7 @@ const Sidebar = ({ collapsed }) => {
       hover:before:w-5 hover:before:bg-red-500"
               >
                 <Link to="/submenu">Submenu</Link>
-              </li>
+              </li> */}
 
               <li
                 className="relative pl-6 cursor-pointer

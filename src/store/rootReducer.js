@@ -17,6 +17,7 @@ import hotelReducer from "./slice/HotelSlice";
 import visaReducer from "./slice/visasSlice";
 import transportReducer from "./slice/transportSlice";
 import reportReducer from "./slice/reportSlice";
+
 const reducer = combineReducers({
   auth: authReducer,
   menu: menuReducer,

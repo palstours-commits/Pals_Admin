@@ -9,7 +9,7 @@ import {
   clearPackageMessage,
   deletePackageImage,
 } from "../../../store/slice/packageSlice";
-import { getZones } from "../../../store/slice/zoneSlice";
+import { getMenuByZone, getZones } from "../../../store/slice/zoneSlice";
 import SingleSelectDropdown from "../../../common/SingleSelectDropdown";
 import { notifyAlert } from "../../../utils/notificationService";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -18,22 +18,27 @@ import Image from "../../../common/Image";
 import ItineraryEditor from "../../../common/ItineraryEditor";
 import ImportantInfoEditor from "../../../common/ImportantInfoEditor";
 import { getIcons } from "../../../store/slice/iconSlice";
+import { getMenus } from "../../../store/slice/menuSlice";
 
 const CreatePackage = ({ packageData, onClose }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { zones } = useSelector((state) => state.zone);
+  const { menuZones } = useSelector((state) => state.zone);
   const { icons } = useSelector((state) => state.icon);
   const { actionLoading, error, message } = useSelector(
     (state) => state.package,
   );
+  const { menus } = useSelector(
+    (state) => state.menu,
+  );
+
+  console.log(packageData);
 
   const [imagePreviews, setImagePreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
-  const [selectedSubMenuId, setSelectedSubMenuId] = useState("");
   const [isDragging, setIsDragging] = useState(false);
-
   const [formData, setFormData] = useState({
+    menuId: "",
     zoneId: "",
     packageName: "",
     slug: "",
@@ -53,6 +58,13 @@ const CreatePackage = ({ packageData, onClose }) => {
     isTrending: false,
   });
 
+  console.log(formData.menuId);
+
+
+  useEffect(() => {
+    dispatch(getMenus());
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch(getZones());
   }, [dispatch]);
@@ -65,6 +77,7 @@ const CreatePackage = ({ packageData, onClose }) => {
     if (packageData) {
       setFormData({
         zoneId: packageData?.zoneId?._id || "",
+        menuId: packageData?.zoneId?.menuId?._id || "",
         packageName: packageData?.packageName || "",
         destinations: packageData?.destinations || "",
         days: packageData?.days || "",
@@ -88,19 +101,16 @@ const CreatePackage = ({ packageData, onClose }) => {
         isTrending: packageData?.isTrending || false,
       });
       setExistingImages(packageData?.images || []);
-      if (packageData?.zoneId?.subMenuId?._id) {
-        setSelectedSubMenuId(packageData.zoneId.subMenuId._id);
-      }
     }
   }, [packageData]);
 
-  const subMenus = [
-    ...new Map(zones?.map((z) => [z?.subMenuId?._id, z?.subMenuId])).values(),
-  ];
 
-  const filteredZones = selectedSubMenuId
-    ? zones?.filter((z) => z?.subMenuId?._id === selectedSubMenuId)
-    : [];
+  useEffect(() => {
+    if (packageData?.zoneId?.menuId?.slug) {
+      dispatch(getMenuByZone(packageData.zoneId.menuId.slug));
+    }
+  }, [packageData, dispatch]);
+
 
   const toggleIcon = (iconId) => {
     setFormData((prev) => {
@@ -224,55 +234,55 @@ const CreatePackage = ({ packageData, onClose }) => {
   return (
     <div className="m-6">
       <div className="p-6 max-w-7xl mx-auto bg-white rounded shadow ">
-        {/* <h1
-          className="text-2xl font-bold mb-6 pb-4 cursor-pointer"
-          onClick={onClose}
-        >
-          ← {packageData ? "Update Package" : "Create Package"}
-        </h1> */}
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="lg:sticky lg:top-0 self-start space-y-6">
               <div>
 
-               <h1
-          className="text-2xl font-bold mb-6 pb-4 cursor-pointer"
-          onClick={onClose}
-        >
-          ← {packageData ? "Update Package" : "Create Package"}
-        </h1>
+                <h1
+                  className="text-2xl font-bold mb-6 pb-4 cursor-pointer"
+                  onClick={onClose}
+                >
+                  ← {packageData ? "Update Package" : "Create Package"}
+                </h1>
 
-                <label className="text-sm font-medium mb-1 block">
-                  Holiday Type *
-                </label>
+                <div>
+                  <label className="text-sm font-medium mb-1 block">
+                    Menu *
+                  </label>
+                  <SingleSelectDropdown
+                    options={menus}
+                    value={formData.menuId}
+                    onChange={(value, item) => {
+                      setFormData({
+                        ...formData,
+                        menuId: item?._id,
+                        zoneId: "",
+                      });
 
-                <SingleSelectDropdown
-                  options={subMenus}
-                  value={selectedSubMenuId}
-                  onChange={(value) => {
-                    setSelectedSubMenuId(value);
-                    setFormData({ ...formData, zoneId: "" });
-                  }}
-                  placeholder="Select Holiday Type"
-                  labelKey="name"
-                  valueKey="_id"
-                />
+                      dispatch(getMenuByZone(item?.slug));
+                    }}
+                    placeholder="Select Menu"
+                    labelKey="name"
+                    valueKey="_id"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-1 block">Zone *</label>
+                <label className="text-sm font-medium mb-1 block">
+                  Zone *
+                </label>
                 <SingleSelectDropdown
-                  options={filteredZones}
+                  options={menuZones}
                   value={formData.zoneId}
                   onChange={(value) =>
-                    setFormData({ ...formData, zoneId: value })
+                    setFormData((prev) => ({
+                      ...prev,
+                      zoneId: value,
+                    }))
                   }
-                  placeholder={
-                    selectedSubMenuId
-                      ? "Select Zone"
-                      : "Select Holiday Type First"
-                  }
-                  disabled={!selectedSubMenuId}
+                  placeholder="Select Zone"
                   labelKey="name"
                   valueKey="_id"
                 />

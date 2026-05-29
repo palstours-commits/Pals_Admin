@@ -107,10 +107,31 @@ export const restoreZone = createAsyncThunk(
   },
 );
 
+export const getMenuByZone = createAsyncThunk(
+  "submenu/getMenuByZone",
+  async (slug, thunkAPI) => {
+    try {
+      const response = await FetchApi({
+        endpoint: `/user/zone/getzonebymenu/${slug}`,
+        method: "GET",
+      });
+
+      return response?.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Failed to fetch submenu",
+      );
+    }
+  },
+);
+
 const zoneSlice = createSlice({
   name: "zone",
   initialState: {
     zones: [],
+    menuZones: [],
     loading: false,
     actionLoading: false,
     error: null,
@@ -143,6 +164,7 @@ const zoneSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
       .addCase(createZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
@@ -155,6 +177,7 @@ const zoneSlice = createSlice({
         state.actionLoading = false;
         state.error = action.payload;
       })
+
       .addCase(updateZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
@@ -167,6 +190,7 @@ const zoneSlice = createSlice({
         state.actionLoading = false;
         state.error = action.payload;
       })
+
       .addCase(deleteZone.pending, (state) => {
         state.actionLoading = true;
         state.deletedError = null;
@@ -180,6 +204,7 @@ const zoneSlice = createSlice({
         state.actionLoading = false;
         state.deletedError = action.payload;
       })
+
       .addCase(restoreZone.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
@@ -190,6 +215,20 @@ const zoneSlice = createSlice({
       })
       .addCase(restoreZone.rejected, (state, action) => {
         state.actionLoading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(getMenuByZone.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getMenuByZone.fulfilled, (state, action) => {
+        state.loading = false;
+        state.menuZones = action.payload?.zones || [];
+      })
+      .addCase(getMenuByZone.rejected, (state, action) => {
+        state.loading = false;
+        state.menuZones = [];
         state.error = action.payload;
       });
   },

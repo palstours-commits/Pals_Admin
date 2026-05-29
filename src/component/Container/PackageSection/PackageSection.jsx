@@ -143,10 +143,6 @@ const PackageSection = () => {
                     <div className="p-5">
                       <div className="flex justify-between mb-1">
                         <span className="text-sm text-red-600 font-semibold">
-                          {pkg.zoneId?.subMenuId?.name}
-                          {pkg.zoneId?.subMenuId?.name &&
-                            pkg.zoneId?.name &&
-                            " / "}
                           {pkg.zoneId?.name}
                         </span>
 

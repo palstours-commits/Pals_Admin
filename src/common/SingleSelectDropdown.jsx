@@ -12,31 +12,26 @@ const SingleSelectDropdown = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState([]);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    if (!Array.isArray(options)) {
-      setFilteredOptions([]);
-      return;
-    }
-    const filtered = options.filter((opt) => {
-      const name = opt?.[labelKey];
-      return (
-        typeof name === "string" &&
-        name.toLowerCase().includes(search.toLowerCase())
-      );
-    });
-    setFilteredOptions(filtered);
-  }, [search, options, labelKey]);
+  const filteredOptions = Array.isArray(options)
+    ? options.filter((opt) => {
+        const name = opt?.[labelKey];
 
-  const handleSelect = (id) => {
-    onChange(id);
+        return (
+          typeof name === "string" &&
+          name.toLowerCase().includes(search.toLowerCase())
+        );
+      })
+    : [];
+
+  const handleSelect = (item) => {
+    onChange(item._id, item);
     setOpen(false);
     setSearch("");
   };
 
-  const selectedItem = options.find((o) => o._id === value);
+  const selectedItem = options.find((o) => o?._id === value);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,7 +39,9 @@ const SingleSelectDropdown = ({
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -53,11 +50,13 @@ const SingleSelectDropdown = ({
   return (
     <div className="relative w-full" ref={dropdownRef}>
       {label && (
-        <label className="block text-sm  mb-2 text-gray-600">{label}</label>
+        <label className="block text-sm mb-2 text-gray-600">
+          {label}
+        </label>
       )}
+
       <div
-        className="w-full p-3 border border-gray-300 rounded-md cursor-pointer 
-                flex items-center justify-between bg-white relative"
+        className="w-full p-3 border border-gray-300 rounded-md cursor-pointer flex items-center justify-between bg-white relative"
         onClick={() => setOpen(!open)}
       >
         <span className={value ? "text-gray-900" : "text-gray-400"}>
@@ -76,6 +75,7 @@ const SingleSelectDropdown = ({
               }}
             />
           )}
+
           <ChevronDown className="w-5 h-5 text-gray-500" />
         </div>
       </div>
@@ -85,6 +85,7 @@ const SingleSelectDropdown = ({
           {searchable && (
             <div className="p-2 border-b border-gray-300 flex items-center gap-2">
               <Search size={15} className="text-gray-500" />
+
               <input
                 type="text"
                 placeholder="Search..."
@@ -98,15 +99,21 @@ const SingleSelectDropdown = ({
           {filteredOptions?.map((item) => (
             <div
               key={item._id}
-              className={`p-2  cursor-pointer hover:bg-gray-100 
-                                ${value === item._id ? "bg-gray-200 font-semibold" : ""}`}
-              onClick={() => handleSelect(item._id)}
+              className={`p-2 cursor-pointer hover:bg-gray-100 ${
+                value === item._id
+                  ? "bg-gray-200 font-semibold"
+                  : ""
+              }`}
+              onClick={() => handleSelect(item)}
             >
               {item[labelKey]}
             </div>
           ))}
+
           {filteredOptions.length === 0 && (
-            <p className="p-3 text-gray-400 text-sm">No results</p>
+            <p className="p-3 text-gray-400 text-sm">
+              No results
+            </p>
           )}
         </div>
       )}
