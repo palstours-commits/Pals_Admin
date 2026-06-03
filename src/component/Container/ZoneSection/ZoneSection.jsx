@@ -136,7 +136,7 @@ const Zonesection = () => {
                   <div className="p-5">
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-sm font-semibold text-red-600">
-                        {zone.subMenuId?.name || "SubMenu"}
+                        {zone?.menuId?.name || "SubMenu"}
                       </span>
 
                       <DotMenu
