@@ -37,6 +37,7 @@ const PackageSection = () => {
     return (
       pkg?.packageName?.toLowerCase().includes(search) ||
       pkg?.zoneId?.name?.toLowerCase().includes(search) ||
+      pkg?.menuId?.name?.toLowerCase().includes(search) ||
       pkg?.zoneId?.subMenuId?.name?.toLowerCase().includes(search) ||
       pkg?.destinations?.some((d) => d.toLowerCase().includes(search)) ||
       (search === "active" && pkg?.status === 1) ||
@@ -143,7 +144,7 @@ const PackageSection = () => {
                     <div className="p-5">
                       <div className="flex justify-between mb-1">
                         <span className="text-sm text-red-600 font-semibold">
-                          {pkg.zoneId?.name}
+                         {pkg.zoneId?.menuId?.name} | <span className="text-green-600">{pkg.zoneId?.name}</span>
                         </span>
 
                         <DotMenu
