@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@100..900&display=swap");
+
 @import "tailwindcss";
 
 body {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Jost", sans-serif;
   font-style: normal;
 }
 
@@ -17,11 +18,11 @@ body {
 
 .ck-editor__editable {
   min-height: 250px;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Jost", sans-serif;
 }
 
 .ck-content {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Jost", sans-serif;
 }
 
 .ck-content ol {

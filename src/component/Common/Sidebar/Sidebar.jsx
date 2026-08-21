@@ -10,8 +10,8 @@ import {
   FiSettings,
 } from "react-icons/fi";
 import { Link, NavLink } from "react-router-dom";
+import { Briefcase, Images } from "lucide-react";
 
-import { Briefcase } from "lucide-react";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { MdDateRange } from "react-icons/md";
 import { RiArticleLine, RiCoupon3Line } from "react-icons/ri";
@@ -89,9 +89,8 @@ const Sidebar = ({ collapsed }) => {
 
             {!collapsed && (
               <FiChevronDown
-                className={`transition-transform ${
-                  openMenu ? "rotate-180" : ""
-                }`}
+                className={`transition-transform ${openMenu ? "rotate-180" : ""
+                  }`}
               />
             )}
           </div>
@@ -170,9 +169,8 @@ const Sidebar = ({ collapsed }) => {
 
             {!collapsed && (
               <FiChevronDown
-                className={`transition-transform ${
-                  openService ? "rotate-180" : ""
-                }`}
+                className={`transition-transform ${openService ? "rotate-180" : ""
+                  }`}
               />
             )}
           </div>
@@ -272,6 +270,12 @@ const Sidebar = ({ collapsed }) => {
           to="/blog"
           icon={RiArticleLine}
           label="Blog"
+          collapsed={collapsed}
+        />
+        <SidebarItem
+          to="/gallery"
+          icon={Images}
+          label="Gallery / Videos"
           collapsed={collapsed}
         />
         <SidebarItem

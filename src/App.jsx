@@ -27,6 +27,7 @@ import Hotel from "./pages/Hotel/Hotel";
 import Visa from "./pages/Visa/Visa";
 import Transport from "./pages/Transport/Transport";
 import Report from "./pages/Report/Report";
+import Gallery from "./component/Container/GallerySection/GallerySection";
 
 function App() {
   const { accessToken } = useSelector((state) => state.auth);
@@ -59,6 +60,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/career" element={<Career />} />
         <Route path="/reports" element={<Report />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/service/flight" element={<Flight />} />
         <Route path="/service/hotel" element={<Hotel />} />
         <Route path="/service/visa" element={<Visa />} />

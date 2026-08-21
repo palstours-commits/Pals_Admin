@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
 
-const DotMenu = ({ onEdit, onDelete }) => {
+const DotMenu = ({ onEdit, onDelete  }) => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
   const menuRef = useRef(null);
@@ -41,7 +41,7 @@ const DotMenu = ({ onEdit, onDelete }) => {
       <button
         ref={buttonRef}
         onClick={toggleMenu}
-        className="p-2 rounded-full hover:bg-gray-100 focus:outline-none cursor-pointer"
+        className="p-2 rounded-full bg-gray-100 focus:outline-none cursor-pointer"
       >
         &#x22EE;
       </button>
@@ -67,7 +67,7 @@ const DotMenu = ({ onEdit, onDelete }) => {
                       setIsOpen(false);
                       onEdit();
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 bg-gray-100"
                   >
                     Update
                   </button>
@@ -78,7 +78,7 @@ const DotMenu = ({ onEdit, onDelete }) => {
                       setIsOpen(false);
                       onDelete();
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 bg-gray-100"
                   >
                     Delete
                   </button>
