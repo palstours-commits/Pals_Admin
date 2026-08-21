@@ -64,6 +64,7 @@ const HomeSection = () => {
   const { counts, loading, bookings, recent } = useSelector(
     (state) => state.dashboard,
   );
+  
 
   useEffect(() => {
     dispatch(getDashboardCounts());

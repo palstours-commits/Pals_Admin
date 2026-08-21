@@ -3,13 +3,23 @@ import { FetchApi } from "../../api/FetchApi";
 
 export const getGallery = createAsyncThunk(
   "gallery/getGallery",
-  async (_, thunkAPI) => {
+  async (
+    { imagePage = 1, imageLimit = 10, videoPage = 1, videoLimit = 10 } = {},
+    thunkAPI,
+  ) => {
     const state = thunkAPI.getState();
     const token = state?.auth?.accessToken;
 
     try {
+      const params = new URLSearchParams();
+
+      params.append("imagePage", imagePage);
+      params.append("imageLimit", imageLimit);
+      params.append("videoPage", videoPage);
+      params.append("videoLimit", videoLimit);
+
       const response = await FetchApi({
-        endpoint: "/admin/gallery",
+        endpoint: `/admin/gallery?${params.toString()}`,
         method: "GET",
         token,
       });
@@ -63,7 +73,15 @@ export const createGallery = createAsyncThunk(
         token,
       });
 
-      thunkAPI.dispatch(getGallery());
+      const currentState = thunkAPI.getState().gallery;
+      thunkAPI.dispatch(
+        getGallery({
+          imagePage: currentState.imagePage || 1,
+          imageLimit: currentState.imageLimit || 10,
+          videoPage: currentState.videoPage || 1,
+          videoLimit: currentState.videoLimit || 10,
+        }),
+      );
 
       return response?.data;
     } catch (err) {
@@ -89,7 +107,29 @@ export const deleteGallery = createAsyncThunk(
         token,
       });
 
-      thunkAPI.dispatch(getGallery());
+      const currentState = thunkAPI.getState().gallery;
+      const imageTotalPages = currentState.imageTotalPages || 1;
+      const videoTotalPages = currentState.videoTotalPages || 1;
+
+      let imagePage = currentState.imagePage || 1;
+      let videoPage = currentState.videoPage || 1;
+
+      if (imagePage > imageTotalPages) {
+        imagePage = Math.max(1, imageTotalPages);
+      }
+
+      if (videoPage > videoTotalPages) {
+        videoPage = Math.max(1, videoTotalPages);
+      }
+
+      thunkAPI.dispatch(
+        getGallery({
+          imagePage: imagePage,
+          imageLimit: currentState.imageLimit || 10,
+          videoPage: videoPage,
+          videoLimit: currentState.videoLimit || 10,
+        }),
+      );
 
       return response?.data;
     } catch (err) {
@@ -115,7 +155,15 @@ export const deleteGalleryFile = createAsyncThunk(
         token,
       });
 
-      thunkAPI.dispatch(getGallery());
+      const currentState = thunkAPI.getState().gallery;
+      thunkAPI.dispatch(
+        getGallery({
+          imagePage: currentState.imagePage || 1,
+          imageLimit: currentState.imageLimit || 10,
+          videoPage: currentState.videoPage || 1,
+          videoLimit: currentState.videoLimit || 10,
+        }),
+      );
 
       return response?.data;
     } catch (err) {
@@ -141,7 +189,15 @@ export const restoreGallery = createAsyncThunk(
         token,
       });
 
-      thunkAPI.dispatch(getGallery());
+      const currentState = thunkAPI.getState().gallery;
+      thunkAPI.dispatch(
+        getGallery({
+          imagePage: currentState.imagePage || 1,
+          imageLimit: currentState.imageLimit || 10,
+          videoPage: currentState.videoPage || 1,
+          videoLimit: currentState.videoLimit || 10,
+        }),
+      );
 
       return response?.data;
     } catch (err) {
@@ -202,35 +258,48 @@ const gallerySlice = createSlice({
     galleryItem: null,
     galleryImages: [],
     galleryVideos: [],
-
     loading: false,
     actionLoading: false,
-
     error: null,
     message: null,
-
     deletedMessage: null,
     deletedError: null,
-
     imageLoading: false,
     videoLoading: false,
+    imagePage: 1,
+    imageLimit: 10,
+    imageTotal: 0,
+    imageTotalPages: 1,
+    videoPage: 1,
+    videoLimit: 10,
+    videoTotal: 0,
+    videoTotalPages: 1,
   },
 
   reducers: {
     clearGalleryError(state) {
       state.error = null;
     },
-
     clearGalleryMessage(state) {
       state.message = null;
     },
-
     clearDeletedGalleryMessage(state) {
       state.deletedMessage = null;
     },
-
     clearGalleryItem(state) {
       state.galleryItem = null;
+    },
+    setImagePage(state, action) {
+      state.imagePage = action.payload;
+    },
+    setImageLimit(state, action) {
+      state.imageLimit = action.payload;
+    },
+    setVideoPage(state, action) {
+      state.videoPage = action.payload;
+    },
+    setVideoLimit(state, action) {
+      state.videoLimit = action.payload;
     },
   },
 
@@ -245,11 +314,91 @@ const gallerySlice = createSlice({
       .addCase(getGallery.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.galleries =
-          action.payload?.galleries ||
-          action.payload?.gallery ||
-          action.payload ||
+        const data = action.payload || {};
+
+        const images =
+          data?.images?.data ||
+          data?.images?.items ||
+          data?.images?.galleries ||
+          data?.images ||
+          data?.galleryImages ||
           [];
+
+        const videos =
+          data?.videos?.data ||
+          data?.videos?.items ||
+          data?.videos?.galleries ||
+          data?.videos ||
+          data?.galleryVideos ||
+          [];
+
+        const combined = data?.galleries || data?.gallery || [];
+
+        state.galleryImages = Array.isArray(images) ? images : [];
+        state.galleryVideos = Array.isArray(videos) ? videos : [];
+        state.galleries = Array.isArray(combined)
+          ? combined
+          : [...state.galleryImages, ...state.galleryVideos];
+
+        state.imagePage = Number(
+          data?.imagePage ??
+            data?.images?.page ??
+            data?.images?.currentPage ??
+            data?.pagination?.imagePage ??
+            1,
+        );
+
+        state.imageLimit = Number(
+          data?.imageLimit ??
+            data?.images?.limit ??
+            data?.pagination?.imageLimit ??
+            10,
+        );
+
+        state.imageTotal = Number(
+          data?.imageTotal ??
+            data?.images?.total ??
+            data?.pagination?.imageTotal ??
+            state.galleryImages.length,
+        );
+
+        state.imageTotalPages = Number(
+          data?.imageTotalPages ??
+            data?.images?.totalPages ??
+            data?.images?.lastPage ??
+            data?.pagination?.imageTotalPages ??
+            Math.max(1, Math.ceil(state.imageTotal / state.imageLimit)),
+        );
+
+        state.videoPage = Number(
+          data?.videoPage ??
+            data?.videos?.page ??
+            data?.videos?.currentPage ??
+            data?.pagination?.videoPage ??
+            1,
+        );
+
+        state.videoLimit = Number(
+          data?.videoLimit ??
+            data?.videos?.limit ??
+            data?.pagination?.videoLimit ??
+            10,
+        );
+
+        state.videoTotal = Number(
+          data?.videoTotal ??
+            data?.videos?.total ??
+            data?.pagination?.videoTotal ??
+            state.galleryVideos.length,
+        );
+
+        state.videoTotalPages = Number(
+          data?.videoTotalPages ??
+            data?.videos?.totalPages ??
+            data?.videos?.lastPage ??
+            data?.pagination?.videoTotalPages ??
+            Math.max(1, Math.ceil(state.videoTotal / state.videoLimit)),
+        );
       })
 
       .addCase(getGallery.rejected, (state, action) => {
@@ -283,7 +432,6 @@ const gallerySlice = createSlice({
 
       .addCase(createGallery.fulfilled, (state, action) => {
         state.actionLoading = false;
-
         state.message =
           action.payload?.message || "Gallery uploaded successfully";
       })
@@ -300,7 +448,6 @@ const gallerySlice = createSlice({
 
       .addCase(deleteGallery.fulfilled, (state, action) => {
         state.actionLoading = false;
-
         state.deletedMessage =
           action.payload?.message || "Gallery deleted successfully";
       })
@@ -317,7 +464,6 @@ const gallerySlice = createSlice({
 
       .addCase(deleteGalleryFile.fulfilled, (state, action) => {
         state.actionLoading = false;
-
         state.deletedMessage =
           action.payload?.message ||
           "Gallery file permanently deleted successfully";
@@ -335,7 +481,6 @@ const gallerySlice = createSlice({
 
       .addCase(restoreGallery.fulfilled, (state, action) => {
         state.actionLoading = false;
-
         state.message =
           action.payload?.message || "Gallery restored successfully";
       })
@@ -352,7 +497,6 @@ const gallerySlice = createSlice({
 
       .addCase(getGalleryImages.fulfilled, (state, action) => {
         state.imageLoading = false;
-
         state.galleryImages =
           action.payload?.images ||
           action.payload?.gallery ||
@@ -373,7 +517,6 @@ const gallerySlice = createSlice({
 
       .addCase(getGalleryVideos.fulfilled, (state, action) => {
         state.videoLoading = false;
-
         state.galleryVideos =
           action.payload?.videos ||
           action.payload?.gallery ||
@@ -394,6 +537,10 @@ export const {
   clearGalleryMessage,
   clearDeletedGalleryMessage,
   clearGalleryItem,
+  setImagePage,
+  setImageLimit,
+  setVideoPage,
+  setVideoLimit,
 } = gallerySlice.actions;
 
 export default gallerySlice.reducer;
